@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { InvoiceHeader } from "./InvoiceHeader";
 import { CustomerSection } from "./CustomerSection";
 import { InvoiceItems } from "./InvoiceItems";
@@ -8,7 +8,21 @@ import { InvoiceActions } from "./InvoiceActions";
 import { InvoiceMessages } from "./InvoiceMessages";
 import { InvoiceType, InvoiceItem } from "@/types/invoice";
 import { generateInvoiceNumber } from "@/lib/invoice-utils";
-import { InvoiceTags } from "./InvoiceTags";
+import { calculateDueDate } from "@/lib/invoice-utils";
+import { Label } from "@/components/ui/label";
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { format } from "date-fns";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { CalendarIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export const InvoiceForm: React.FC = () => {
   const [invoice, setInvoice] = useState<InvoiceType>({
@@ -26,7 +40,17 @@ export const InvoiceForm: React.FC = () => {
         country: "",
       },
     },
-    items: [],
+    items: [
+      {
+        id: Date.now().toString(),
+        serviceDate: "",
+        product: "",
+        description: "",
+        quantity: 1,
+        rate: 0,
+        amount: 0,
+      }
+    ],
     messageOnInvoice: "",
     messageOnStatement: "",
     terms: "Net 30",
@@ -95,8 +119,36 @@ export const InvoiceForm: React.FC = () => {
 
   // Function to remove an item
   const removeInvoiceItem = (itemId: string) => {
+    // Only remove if there's more than one item
+    if (invoice.items.length > 1) {
+      updateInvoice({
+        items: invoice.items.filter((item) => item.id !== itemId),
+      });
+    }
+  };
+
+  // Function to clear all items but leave one empty item
+  const clearAllItems = () => {
     updateInvoice({
-      items: invoice.items.filter((item) => item.id !== itemId),
+      items: [
+        {
+          id: Date.now().toString(),
+          serviceDate: "",
+          product: "",
+          description: "",
+          quantity: 1,
+          rate: 0,
+          amount: 0,
+        }
+      ]
+    });
+  };
+
+  // Function to update terms and recalculate due date
+  const updateTerms = (terms: string) => {
+    updateInvoice({ 
+      terms,
+      dueDate: calculateDueDate(invoice.invoiceDate, terms)
     });
   };
 
@@ -107,11 +159,8 @@ export const InvoiceForm: React.FC = () => {
   };
 
   return (
-    <div className="bg-white shadow-sm rounded-sm overflow-hidden border border-gray-200">
-      <InvoiceHeader 
-        invoice={invoice} 
-        updateInvoice={updateInvoice} 
-      />
+    <div className="bg-transparent pb-20">
+      <InvoiceHeader />
       
       <div className="p-4">
         <CustomerSection 
@@ -121,27 +170,104 @@ export const InvoiceForm: React.FC = () => {
           updateInvoice={updateInvoice}
         />
         
-        <div className="mb-4">
-          <InvoiceTags 
-            tags={invoice.tags || []} 
-            onTagsUpdate={(tags) => updateInvoice({ tags })} 
-          />
+        <div className="mb-6 grid grid-cols-3 gap-4">
+          <div>
+            <Label className="text-xs font-medium text-gray-700">INVOICE DATE</Label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "w-full justify-start text-left font-normal h-9 text-xs",
+                    !invoice.invoiceDate && "text-muted-foreground"
+                  )}
+                >
+                  <CalendarIcon className="mr-2 h-3.5 w-3.5" />
+                  {invoice.invoiceDate ? (
+                    format(invoice.invoiceDate, "PPP")
+                  ) : (
+                    <span>Pick a date</span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={invoice.invoiceDate}
+                  onSelect={(date) => date && updateInvoice({ invoiceDate: date })}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+          
+          <div>
+            <Label className="text-xs font-medium text-gray-700">TERMS</Label>
+            <Select value={invoice.terms} onValueChange={updateTerms}>
+              <SelectTrigger className="h-9 text-xs">
+                <SelectValue placeholder="Select terms" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Due on receipt">Due on receipt</SelectItem>
+                <SelectItem value="Net 15">Net 15</SelectItem>
+                <SelectItem value="Net 30">Net 30</SelectItem>
+                <SelectItem value="Net 60">Net 60</SelectItem>
+                <SelectItem value="Custom">Custom</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <div>
+            <Label className="text-xs font-medium text-gray-700">DUE DATE</Label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "w-full justify-start text-left font-normal h-9 text-xs",
+                    !invoice.dueDate && "text-muted-foreground"
+                  )}
+                >
+                  <CalendarIcon className="mr-2 h-3.5 w-3.5" />
+                  {invoice.dueDate ? (
+                    format(invoice.dueDate, "PPP")
+                  ) : (
+                    <span>Pick a date</span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={invoice.dueDate}
+                  onSelect={(date) => date && updateInvoice({ dueDate: date })}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
         </div>
         
         <InvoiceItems 
           items={invoice.items} 
           addItem={addInvoiceItem} 
           updateItem={updateInvoiceItem} 
-          removeItem={removeInvoiceItem} 
+          removeItem={removeInvoiceItem}
+          clearAllItems={clearAllItems}
         />
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
-          <InvoiceMessages 
-            messageOnInvoice={invoice.messageOnInvoice} 
-            messageOnStatement={invoice.messageOnStatement}
-            onMessageOnInvoiceChange={(messageOnInvoice) => updateInvoice({ messageOnInvoice })}
-            onMessageOnStatementChange={(messageOnStatement) => updateInvoice({ messageOnStatement })} 
-          />
+          <div>
+            <Label className="text-xs font-medium text-gray-700">MESSAGE ON INVOICE</Label>
+            <div className="mt-1">
+              <Input 
+                className="h-9 text-xs"
+                value={invoice.messageOnInvoice}
+                onChange={(e) => updateInvoice({ messageOnInvoice: e.target.value })}
+                placeholder="Enter a message to be displayed on the invoice"
+              />
+            </div>
+          </div>
           
           <InvoiceSummary 
             invoice={invoice} 
@@ -150,7 +276,8 @@ export const InvoiceForm: React.FC = () => {
       </div>
       
       <InvoiceActions 
-        onSave={saveInvoice} 
+        onSave={saveInvoice}
+        onClear={clearAllItems}
       />
     </div>
   );

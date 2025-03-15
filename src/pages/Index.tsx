@@ -1,14 +1,11 @@
 
 import { InvoiceForm } from "@/components/invoice/InvoiceForm";
-import { AppLayout } from "@/components/layout/AppLayout";
 
 const Index = () => {
   return (
-    <AppLayout>
-      <div className="w-full mx-auto">
-        <InvoiceForm />
-      </div>
-    </AppLayout>
+    <div className="bg-gray-100 min-h-screen w-full">
+      <InvoiceForm />
+    </div>
   );
 };
 

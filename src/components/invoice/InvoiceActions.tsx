@@ -2,43 +2,48 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 interface InvoiceActionsProps {
   onSave: () => void;
+  onClear: () => void;
 }
 
-export const InvoiceActions: React.FC<InvoiceActionsProps> = ({ onSave }) => {
+export const InvoiceActions: React.FC<InvoiceActionsProps> = ({ onSave, onClear }) => {
   return (
-    <div className="bg-gray-100 border-t border-gray-200 p-2.5 flex justify-between items-center">
+    <div className="fixed bottom-0 left-0 right-0 bg-gray-800 text-white border-t border-gray-700 p-2.5 flex justify-between items-center z-10">
       <div>
-        <Button variant="ghost" className="text-gray-600 text-xs h-7">
+        <Button variant="ghost" className="text-gray-300 text-xs h-7 hover:bg-gray-700 hover:text-white">
           Cancel
         </Button>
-        <Button variant="ghost" className="text-gray-600 text-xs h-7">
+        <Button 
+          variant="ghost" 
+          className="text-gray-300 text-xs h-7 hover:bg-gray-700 hover:text-white" 
+          onClick={onClear}
+        >
           Clear
         </Button>
       </div>
       
       <div className="flex space-x-2">
-        <Button variant="outline" className="text-gray-700 border-gray-300 h-7 text-xs">
-          Print or Preview
-        </Button>
-        
-        <Button variant="outline" className="text-gray-700 border-gray-300 h-7 text-xs">
-          Make recurring
-        </Button>
-        
-        <Button variant="outline" className="text-gray-700 border-gray-300 h-7 text-xs">
-          Customise
-        </Button>
-        
         <div className="flex">
-          <Button onClick={onSave} className="bg-green-600 hover:bg-green-700 rounded-r-none h-7 text-xs">
-            Save
-          </Button>
-          <Button className="bg-green-600 hover:bg-green-700 px-1.5 rounded-l-none border-l border-green-700 h-7">
-            <ChevronDown className="h-3 w-3" />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <div className="flex">
+                <Button onClick={onSave} className="bg-green-600 hover:bg-green-700 rounded-r-none h-7 text-xs">
+                  Save and close
+                </Button>
+                <Button className="bg-green-600 hover:bg-green-700 px-1.5 rounded-l-none border-l border-green-700 h-7">
+                  <ChevronDown className="h-3 w-3" />
+                </Button>
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={onSave}>
+                Save and new
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </div>

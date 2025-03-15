@@ -5,12 +5,20 @@ import { Input } from "@/components/ui/input";
 import { InvoiceItem } from "@/types/invoice";
 import { Plus, Trash2, Calendar, ChevronDown, HelpCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select";
 
 interface InvoiceItemsProps {
   items: InvoiceItem[];
   addItem: () => void;
   updateItem: (itemId: string, updates: Partial<InvoiceItem>) => void;
   removeItem: (itemId: string) => void;
+  clearAllItems: () => void;
 }
 
 export const InvoiceItems: React.FC<InvoiceItemsProps> = ({
@@ -18,6 +26,7 @@ export const InvoiceItems: React.FC<InvoiceItemsProps> = ({
   addItem,
   updateItem,
   removeItem,
+  clearAllItems
 }) => {
   const handleInputChange = (
     itemId: string,
@@ -32,8 +41,13 @@ export const InvoiceItems: React.FC<InvoiceItemsProps> = ({
     }
   };
 
+  // Track the currently selected row
+  const [selectedRow, setSelectedRow] = React.useState<string | null>(
+    items.length > 0 ? items[0].id : null
+  );
+
   return (
-    <div className="mt-4">
+    <div className="mt-4 pb-20">
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
@@ -66,93 +80,127 @@ export const InvoiceItems: React.FC<InvoiceItemsProps> = ({
             </tr>
           </thead>
           <tbody>
-            {items.length === 0 ? (
-              <tr>
-                <td colSpan={8} className="text-center py-4 text-gray-500">
-                  No items yet. Click "Add lines" to add an item.
+            {items.map((item, index) => (
+              <tr 
+                key={item.id} 
+                className={cn(
+                  "border-b hover:bg-gray-50 group/row transition-colors",
+                  selectedRow === item.id ? "bg-blue-50" : ""
+                )}
+                onClick={() => setSelectedRow(item.id)}
+              >
+                <td className="text-center py-1 text-gray-500 w-8">{index + 1}</td>
+                <td className="py-1 w-32">
+                  <div className="relative">
+                    <Input
+                      className={cn(
+                        "w-full border-gray-200 h-8 focus:z-10",
+                        selectedRow === item.id ? "border-blue-400 ring-0 focus:ring-0" : ""
+                      )}
+                      value={item.serviceDate || ""}
+                      onChange={(e) =>
+                        handleInputChange(item.id, "serviceDate", e.target.value)
+                      }
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                    <Button 
+                      variant="ghost" 
+                      className="absolute right-1 top-1 h-6 w-6 p-0"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Calendar className="h-3.5 w-3.5 text-gray-500" />
+                    </Button>
+                  </div>
+                </td>
+                <td className="py-1">
+                  <div className="relative">
+                    <Select
+                      onValueChange={(value) => handleInputChange(item.id, "product", value)}
+                      value={item.product}
+                    >
+                      <SelectTrigger 
+                        className={cn(
+                          "w-full h-8 font-normal text-gray-700 focus:z-10",
+                          selectedRow === item.id ? "border-blue-400 ring-0 focus:ring-0" : ""
+                        )}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <SelectValue placeholder="Select a product/service" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="product1">Product 1</SelectItem>
+                        <SelectItem value="product2">Product 2</SelectItem>
+                        <SelectItem value="service1">Service 1</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </td>
+                <td className="py-1">
+                  <Input
+                    className={cn(
+                      "border-gray-200 h-8 focus:z-10",
+                      selectedRow === item.id ? "border-blue-400 ring-0 focus:ring-0" : ""
+                    )}
+                    value={item.description}
+                    onChange={(e) =>
+                      handleInputChange(item.id, "description", e.target.value)
+                    }
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                </td>
+                <td className="py-1">
+                  <Input
+                    className={cn(
+                      "border-gray-200 text-right h-8 focus:z-10",
+                      selectedRow === item.id ? "border-blue-400 ring-0 focus:ring-0" : ""
+                    )}
+                    type="number"
+                    value={item.quantity}
+                    onChange={(e) =>
+                      handleInputChange(item.id, "quantity", e.target.value)
+                    }
+                    min="1"
+                    step="1"
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                </td>
+                <td className="py-1">
+                  <Input
+                    className={cn(
+                      "border-gray-200 text-right h-8 focus:z-10",
+                      selectedRow === item.id ? "border-blue-400 ring-0 focus:ring-0" : ""
+                    )}
+                    type="number"
+                    value={item.rate}
+                    onChange={(e) =>
+                      handleInputChange(item.id, "rate", e.target.value)
+                    }
+                    min="0"
+                    step="0.01"
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                </td>
+                <td className="py-1 text-right">
+                  {(item.quantity * item.rate).toFixed(2)}
+                </td>
+                <td className="py-1 text-center">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={cn(
+                      "h-6 w-6 p-0 text-gray-500 opacity-0 group-hover/row:opacity-100 transition-opacity",
+                      items.length === 1 ? "hidden" : ""
+                    )}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeItem(item.id);
+                    }}
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </Button>
                 </td>
               </tr>
-            ) : (
-              items.map((item, index) => (
-                <tr key={item.id} className="border-b">
-                  <td className="text-center py-2 text-gray-500">{index + 1}</td>
-                  <td className="py-2 w-32">
-                    <div className="relative">
-                      <Input
-                        className="w-full border-gray-200 h-9"
-                        value={item.serviceDate || ""}
-                        onChange={(e) =>
-                          handleInputChange(item.id, "serviceDate", e.target.value)
-                        }
-                      />
-                      <Button 
-                        variant="ghost" 
-                        className="absolute right-1 top-1 h-7 w-7 p-0"
-                      >
-                        <Calendar className="h-4 w-4 text-gray-500" />
-                      </Button>
-                    </div>
-                  </td>
-                  <td className="py-2">
-                    <div className="relative">
-                      <Button
-                        variant="outline"
-                        className="w-full justify-between h-9 font-normal text-gray-700"
-                      >
-                        <span>Select a product/service</span>
-                        <ChevronDown className="h-4 w-4 opacity-50" />
-                      </Button>
-                    </div>
-                  </td>
-                  <td className="py-2">
-                    <Input
-                      className="border-gray-200 h-9"
-                      value={item.description}
-                      onChange={(e) =>
-                        handleInputChange(item.id, "description", e.target.value)
-                      }
-                    />
-                  </td>
-                  <td className="py-2">
-                    <Input
-                      className="border-gray-200 text-right h-9"
-                      type="number"
-                      value={item.quantity}
-                      onChange={(e) =>
-                        handleInputChange(item.id, "quantity", e.target.value)
-                      }
-                      min="1"
-                      step="1"
-                    />
-                  </td>
-                  <td className="py-2">
-                    <Input
-                      className="border-gray-200 text-right h-9"
-                      type="number"
-                      value={item.rate}
-                      onChange={(e) =>
-                        handleInputChange(item.id, "rate", e.target.value)
-                      }
-                      min="0"
-                      step="0.01"
-                    />
-                  </td>
-                  <td className="py-2 text-right">
-                    {(item.quantity * item.rate).toFixed(2)}
-                  </td>
-                  <td className="py-2 text-center">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-7 w-7 p-0 text-gray-500"
-                      onClick={() => removeItem(item.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </td>
-                </tr>
-              ))
-            )}
+            ))}
           </tbody>
         </table>
       </div>
@@ -169,14 +217,9 @@ export const InvoiceItems: React.FC<InvoiceItemsProps> = ({
         <Button
           variant="outline"
           className="text-gray-700 border-gray-300 h-7 text-xs"
+          onClick={clearAllItems}
         >
           Clear all lines
-        </Button>
-        <Button
-          variant="outline"
-          className="text-gray-700 border-gray-300 h-7 text-xs"
-        >
-          Add subtotal
         </Button>
       </div>
     </div>
