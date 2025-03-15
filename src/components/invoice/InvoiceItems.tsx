@@ -38,19 +38,31 @@ export const InvoiceItems: React.FC<InvoiceItemsProps> = ({
         <table className="w-full">
           <thead>
             <tr className="text-xs text-gray-600 border-b">
-              <th className="text-center w-8 py-2">#</th>
-              <th className="text-left py-2">SERVICE DATE</th>
-              <th className="text-left py-2">
+              <th className="text-center w-8 py-1.5">
+                <span className="text-[11px]">#</span>
+              </th>
+              <th className="text-left py-1.5">
+                <span className="text-[11px]">SERVICE DATE</span>
+              </th>
+              <th className="text-left py-1.5">
                 <div className="flex items-center">
-                  <span>PRODUCT/SERVICE</span>
-                  <HelpCircle className="h-4 w-4 text-gray-400 ml-1" />
+                  <span className="text-[11px]">PRODUCT/SERVICE</span>
+                  <HelpCircle className="h-3 w-3 text-gray-400 ml-1" />
                 </div>
               </th>
-              <th className="text-left py-2">DESCRIPTION</th>
-              <th className="text-right py-2">QTY</th>
-              <th className="text-right py-2">RATE</th>
-              <th className="text-right py-2">AMOUNT</th>
-              <th className="text-center w-8 py-2"></th>
+              <th className="text-left py-1.5">
+                <span className="text-[11px]">DESCRIPTION</span>
+              </th>
+              <th className="text-right py-1.5">
+                <span className="text-[11px]">QTY</span>
+              </th>
+              <th className="text-right py-1.5">
+                <span className="text-[11px]">RATE</span>
+              </th>
+              <th className="text-right py-1.5">
+                <span className="text-[11px]">AMOUNT</span>
+              </th>
+              <th className="text-center w-8 py-1.5"></th>
             </tr>
           </thead>
           <tbody>
@@ -148,21 +160,21 @@ export const InvoiceItems: React.FC<InvoiceItemsProps> = ({
       <div className="mt-4 flex space-x-2">
         <Button
           variant="outline"
-          className="text-gray-700 border-gray-300 h-8 text-sm"
+          className="text-gray-700 border-gray-300 h-7 text-xs"
           onClick={addItem}
         >
-          <Plus className="mr-1 h-4 w-4" />
+          <Plus className="mr-1 h-3 w-3" />
           Add lines
         </Button>
         <Button
           variant="outline"
-          className="text-gray-700 border-gray-300 h-8 text-sm"
+          className="text-gray-700 border-gray-300 h-7 text-xs"
         >
           Clear all lines
         </Button>
         <Button
           variant="outline"
-          className="text-gray-700 border-gray-300 h-8 text-sm"
+          className="text-gray-700 border-gray-300 h-7 text-xs"
         >
           Add subtotal
         </Button>

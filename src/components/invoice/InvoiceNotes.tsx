@@ -18,12 +18,12 @@ export const InvoiceNotes: React.FC<InvoiceNotesProps> = ({
   onTermsChange,
 }) => {
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <div>
-        <Label htmlFor="notes" className="qb-input-label">Notes</Label>
+        <Label htmlFor="notes" className="text-xs font-medium text-gray-600">Notes</Label>
         <Textarea
           id="notes"
-          className="min-h-[100px] text-sm"
+          className="min-h-[70px] text-xs"
           placeholder="Add notes to display on the invoice (optional)"
           value={notes}
           onChange={(e) => onNotesChange(e.target.value)}
@@ -31,17 +31,17 @@ export const InvoiceNotes: React.FC<InvoiceNotesProps> = ({
       </div>
       
       <div>
-        <Label htmlFor="terms" className="qb-input-label">Terms</Label>
+        <Label htmlFor="terms" className="text-xs font-medium text-gray-600">Terms</Label>
         <Select value={terms} onValueChange={onTermsChange}>
-          <SelectTrigger id="terms" className="w-full">
+          <SelectTrigger id="terms" className="w-full text-xs h-8">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="Due on receipt">Due on receipt</SelectItem>
-            <SelectItem value="Net 15">Net 15</SelectItem>
-            <SelectItem value="Net 30">Net 30</SelectItem>
-            <SelectItem value="Net 45">Net 45</SelectItem>
-            <SelectItem value="Net 60">Net 60</SelectItem>
+            <SelectItem value="Due on receipt" className="text-xs">Due on receipt</SelectItem>
+            <SelectItem value="Net 15" className="text-xs">Net 15</SelectItem>
+            <SelectItem value="Net 30" className="text-xs">Net 30</SelectItem>
+            <SelectItem value="Net 45" className="text-xs">Net 45</SelectItem>
+            <SelectItem value="Net 60" className="text-xs">Net 60</SelectItem>
           </SelectContent>
         </Select>
       </div>

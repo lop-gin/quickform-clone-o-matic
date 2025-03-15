@@ -17,12 +17,12 @@ export const InvoiceMessages: React.FC<InvoiceMessagesProps> = ({
   onMessageOnStatementChange,
 }) => {
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <div>
-        <Label htmlFor="messageOnInvoice" className="text-sm font-medium text-gray-600">Message on invoice</Label>
+        <Label htmlFor="messageOnInvoice" className="text-xs font-medium text-gray-600">Message on invoice</Label>
         <Textarea
           id="messageOnInvoice"
-          className="min-h-[80px] resize-none text-sm"
+          className="min-h-[70px] resize-none text-xs"
           placeholder="This will show up on the invoice."
           value={messageOnInvoice}
           onChange={(e) => onMessageOnInvoiceChange(e.target.value)}
@@ -30,10 +30,10 @@ export const InvoiceMessages: React.FC<InvoiceMessagesProps> = ({
       </div>
       
       <div>
-        <Label htmlFor="messageOnStatement" className="text-sm font-medium text-gray-600">Message on statement</Label>
+        <Label htmlFor="messageOnStatement" className="text-xs font-medium text-gray-600">Message on statement</Label>
         <Textarea
           id="messageOnStatement"
-          className="min-h-[80px] resize-none text-sm"
+          className="min-h-[70px] resize-none text-xs"
           placeholder="If you send statements to customers, this will show up as the description for this invoice."
           value={messageOnStatement}
           onChange={(e) => onMessageOnStatementChange(e.target.value)}

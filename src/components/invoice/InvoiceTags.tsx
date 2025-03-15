@@ -35,12 +35,12 @@ export const InvoiceTags: React.FC<InvoiceTagsProps> = ({
   };
 
   return (
-    <div className="mb-4">
+    <div className="mb-3">
       <div className="flex items-center mb-1">
-        <Label htmlFor="tags" className="text-sm font-medium text-gray-600 mr-1">Tags</Label>
-        <HelpCircle className="h-4 w-4 text-gray-400" />
+        <Label htmlFor="tags" className="text-xs font-medium text-gray-600 mr-1">Tags</Label>
+        <HelpCircle className="h-3 w-3 text-gray-400" />
         <div className="ml-auto">
-          <Button variant="link" className="text-blue-500 text-sm p-0 h-auto">Manage tags</Button>
+          <Button variant="link" className="text-blue-500 text-xs p-0 h-auto">Manage tags</Button>
         </div>
       </div>
       
@@ -51,14 +51,14 @@ export const InvoiceTags: React.FC<InvoiceTagsProps> = ({
           onChange={(e) => setTagInput(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Start typing to add a tag"
-          className="w-full"
+          className="w-full text-xs"
         />
       </div>
       
       {tags.length > 0 && (
         <div className="flex flex-wrap mt-2">
           {tags.map((tag) => (
-            <div key={tag} className="bg-blue-50 text-blue-600 text-xs px-2 py-1 rounded mr-2 mb-2 flex items-center">
+            <div key={tag} className="bg-blue-50 text-blue-600 text-[10px] px-1.5 py-0.5 rounded mr-1.5 mb-1.5 flex items-center">
               {tag}
               <button
                 onClick={() => removeTag(tag)}

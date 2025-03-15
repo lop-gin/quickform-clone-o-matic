@@ -11,14 +11,14 @@ export const InvoiceSummary: React.FC<InvoiceSummaryProps> = ({
 }) => {
   return (
     <div className="ml-auto text-right space-y-2 w-full max-w-xs">
-      <div className="flex justify-between items-center text-sm">
+      <div className="flex justify-between items-center text-xs">
         <span className="text-gray-600">Total</span>
         <span className="font-medium">Ksh{invoice.total.toFixed(2)}</span>
       </div>
       
-      <div className="flex justify-between items-center text-sm pt-2 border-t border-gray-200">
-        <span className="text-gray-600">Balance due</span>
-        <span className="font-semibold text-xl">Ksh{invoice.balanceDue.toFixed(2)}</span>
+      <div className="flex justify-between items-center pt-2 border-t border-gray-200">
+        <span className="text-gray-600 text-xs">Balance due</span>
+        <span className="font-semibold text-sm">Ksh{invoice.balanceDue.toFixed(2)}</span>
       </div>
     </div>
   );
