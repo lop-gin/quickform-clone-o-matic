@@ -1,21 +1,26 @@
 
 import React from "react";
-import { Customer } from "@/types/invoice";
+import { Customer, InvoiceType } from "@/types/invoice";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, HelpCircle } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
+import { format } from "date-fns";
 
 interface CustomerSectionProps {
   customer: Customer;
+  invoice: InvoiceType;
   updateCustomer: (customer: Customer) => void;
+  updateInvoice: (updates: Partial<InvoiceType>) => void;
 }
 
 export const CustomerSection: React.FC<CustomerSectionProps> = ({
   customer,
+  invoice,
   updateCustomer,
+  updateInvoice,
 }) => {
   const handleCustomerChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -96,7 +101,7 @@ export const CustomerSection: React.FC<CustomerSectionProps> = ({
             <Input
               type="text"
               className="w-full"
-              value={format(new Date(), "dd/MM/yyyy")}
+              value={format(invoice.invoiceDate, "dd/MM/yyyy")}
               placeholder="DD/MM/YYYY"
             />
           </div>
@@ -107,7 +112,7 @@ export const CustomerSection: React.FC<CustomerSectionProps> = ({
             <Input
               type="text"
               className="w-full"
-              value={format(new Date(new Date().setDate(new Date().getDate() + 30)), "dd/MM/yyyy")}
+              value={format(invoice.dueDate, "dd/MM/yyyy")}
               placeholder="DD/MM/YYYY"
             />
           </div>
@@ -145,7 +150,7 @@ export const CustomerSection: React.FC<CustomerSectionProps> = ({
               type="text"
               className="w-full"
               value={invoice.invoiceNumber}
-              onChange={(e) => updateCustomer({...customer})}
+              onChange={(e) => updateInvoice({ invoiceNumber: e.target.value })}
               placeholder=""
             />
           </div>

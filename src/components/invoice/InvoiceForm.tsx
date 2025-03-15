@@ -6,7 +6,7 @@ import { InvoiceItems } from "./InvoiceItems";
 import { InvoiceSummary } from "./InvoiceSummary";
 import { InvoiceActions } from "./InvoiceActions";
 import { InvoiceMessages } from "./InvoiceMessages";
-import { InvoiceType } from "@/types/invoice";
+import { InvoiceType, InvoiceItem } from "@/types/invoice";
 import { generateInvoiceNumber } from "@/lib/invoice-utils";
 import { InvoiceTags } from "./InvoiceTags";
 
@@ -115,8 +115,10 @@ export const InvoiceForm: React.FC = () => {
       
       <div className="p-4">
         <CustomerSection 
-          customer={invoice.customer} 
+          customer={invoice.customer}
+          invoice={invoice}
           updateCustomer={(customer) => updateInvoice({ customer })} 
+          updateInvoice={updateInvoice}
         />
         
         <div className="mb-4">
