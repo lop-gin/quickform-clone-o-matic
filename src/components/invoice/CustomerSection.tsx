@@ -1,11 +1,12 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { Customer } from "@/types/invoice";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { ChevronDown, HelpCircle } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Search, User } from "lucide-react";
 
 interface CustomerSectionProps {
   customer: Customer;
@@ -16,35 +17,16 @@ export const CustomerSection: React.FC<CustomerSectionProps> = ({
   customer,
   updateCustomer,
 }) => {
-  const [sameAddress, setSameAddress] = useState(true);
-  
-  const handleCustomerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCustomerChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     
     if (name.startsWith("billing.")) {
       const billingField = name.replace("billing.", "");
-      const updatedBillingAddress = {
-        ...customer.billingAddress,
-        [billingField]: value,
-      };
-      
-      // If same address is checked, update shipping address too
-      const updatedShippingAddress = sameAddress
-        ? { ...updatedBillingAddress }
-        : customer.shippingAddress;
-      
       updateCustomer({
         ...customer,
-        billingAddress: updatedBillingAddress,
-        shippingAddress: updatedShippingAddress,
-      });
-    } else if (name.startsWith("shipping.")) {
-      const shippingField = name.replace("shipping.", "");
-      updateCustomer({
-        ...customer,
-        shippingAddress: {
-          ...customer.shippingAddress,
-          [shippingField]: value,
+        billingAddress: {
+          ...customer.billingAddress,
+          [billingField]: value,
         },
       });
     } else {
@@ -54,169 +36,120 @@ export const CustomerSection: React.FC<CustomerSectionProps> = ({
       });
     }
   };
-
-  const handleSameAddressChange = (checked: boolean) => {
-    setSameAddress(checked);
-    if (checked) {
-      updateCustomer({
-        ...customer,
-        shippingAddress: { ...customer.billingAddress },
-      });
-    }
-  };
   
   return (
-    <div className="mb-8">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-medium text-gray-900">Customer Information</h2>
-        <Button variant="outline" size="sm" className="flex items-center">
-          <Search className="mr-1 h-4 w-4" />
-          <span>Find Customer</span>
-        </Button>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 border-b border-gray-200 pb-6">
+      <div>
+        <div className="flex items-center mb-1">
+          <Label htmlFor="customer" className="text-sm font-medium text-gray-600 mr-1">Customer</Label>
+          <HelpCircle className="h-4 w-4 text-gray-400" />
+        </div>
+        <div className="relative">
+          <Button variant="outline" className="w-full justify-between font-normal text-gray-700">
+            <span>Select a customer</span>
+            <ChevronDown className="h-4 w-4 opacity-50" />
+          </Button>
+        </div>
+        <div className="mt-4">
+          <div className="flex items-center mb-1">
+            <Label htmlFor="billingAddress" className="text-sm font-medium text-gray-600 mr-1">Billing address</Label>
+          </div>
+          <Textarea 
+            id="billingAddress"
+            name="billing.street"
+            className="min-h-[100px] resize-none text-sm"
+            value={customer.billingAddress.street}
+            onChange={handleCustomerChange}
+          />
+        </div>
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Customer Details */}
-        <div className="space-y-4">
+      <div>
+        <div className="flex items-center mb-1">
+          <Label htmlFor="email" className="text-sm font-medium text-gray-600 mr-1">Customer email</Label>
+          <HelpCircle className="h-4 w-4 text-gray-400" />
+        </div>
+        <Input
+          id="email"
+          name="email"
+          type="email"
+          className="w-full"
+          value={customer.email}
+          onChange={handleCustomerChange}
+          placeholder="Separate emails with a comma"
+        />
+        <div className="flex items-center space-x-2 mt-2">
+          <Checkbox id="sendLater" />
+          <Label htmlFor="sendLater" className="text-sm text-gray-600">
+            Send later
+          </Label>
+          <HelpCircle className="h-4 w-4 text-gray-400" />
+        </div>
+      </div>
+      
+      <div>
+        <div className="grid grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="name" className="qb-input-label">Customer Name</Label>
-            <div className="relative">
-              <Input
-                id="name"
-                name="name"
-                className="qb-input pl-9"
-                value={customer.name}
-                onChange={handleCustomerChange}
-                placeholder="Customer or Company Name"
-              />
-              <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+            <div className="flex items-center mb-1">
+              <Label className="text-sm font-medium text-gray-600 mr-1">Invoice date</Label>
             </div>
-          </div>
-          
-          <div>
-            <Label htmlFor="email" className="qb-input-label">Email</Label>
             <Input
-              id="email"
-              name="email"
-              type="email"
-              className="qb-input"
-              value={customer.email}
-              onChange={handleCustomerChange}
-              placeholder="customer@example.com"
+              type="text"
+              className="w-full"
+              value={format(new Date(), "dd/MM/yyyy")}
+              placeholder="DD/MM/YYYY"
+            />
+          </div>
+          <div>
+            <div className="flex items-center mb-1">
+              <Label className="text-sm font-medium text-gray-600 mr-1">Due date</Label>
+            </div>
+            <Input
+              type="text"
+              className="w-full"
+              value={format(new Date(new Date().setDate(new Date().getDate() + 30)), "dd/MM/yyyy")}
+              placeholder="DD/MM/YYYY"
             />
           </div>
         </div>
         
-        {/* Billing Address */}
-        <div className="space-y-4">
-          <h3 className="font-medium text-gray-700">Billing Address</h3>
-          
-          <div>
-            <Input
-              name="billing.street"
-              className="qb-input"
-              value={customer.billingAddress.street}
-              onChange={handleCustomerChange}
-              placeholder="Street Address"
-            />
+        <div className="mt-4">
+          <div className="flex items-center mb-1">
+            <Label className="text-sm font-medium text-gray-600 mr-1">Terms</Label>
+            <HelpCircle className="h-4 w-4 text-gray-400" />
           </div>
-          
-          <div className="grid grid-cols-2 gap-3">
-            <Input
-              name="billing.city"
-              className="qb-input"
-              value={customer.billingAddress.city}
-              onChange={handleCustomerChange}
-              placeholder="City"
-            />
-            <Input
-              name="billing.state"
-              className="qb-input"
-              value={customer.billingAddress.state}
-              onChange={handleCustomerChange}
-              placeholder="State / Province"
-            />
-          </div>
-          
-          <div className="grid grid-cols-2 gap-3">
-            <Input
-              name="billing.zipCode"
-              className="qb-input"
-              value={customer.billingAddress.zipCode}
-              onChange={handleCustomerChange}
-              placeholder="Zip / Postal Code"
-            />
-            <Input
-              name="billing.country"
-              className="qb-input"
-              value={customer.billingAddress.country}
-              onChange={handleCustomerChange}
-              placeholder="Country"
-            />
-          </div>
-          
-          <div className="flex items-center space-x-2">
-            <Checkbox 
-              id="sameAddress" 
-              checked={sameAddress} 
-              onCheckedChange={handleSameAddressChange} 
-            />
-            <Label htmlFor="sameAddress" className="text-sm text-gray-600">
-              Shipping address same as billing
-            </Label>
+          <div className="relative">
+            <Button variant="outline" className="w-full justify-between font-normal text-gray-700">
+              <span>Net 30</span>
+              <ChevronDown className="h-4 w-4 opacity-50" />
+            </Button>
           </div>
         </div>
         
-        {/* Shipping Address (conditionally displayed) */}
-        {!sameAddress && (
-          <div className="space-y-4 lg:col-start-2">
-            <h3 className="font-medium text-gray-700">Shipping Address</h3>
-            
-            <div>
-              <Input
-                name="shipping.street"
-                className="qb-input"
-                value={customer.shippingAddress.street}
-                onChange={handleCustomerChange}
-                placeholder="Street Address"
-              />
+        <div className="grid grid-cols-2 gap-4 mt-4">
+          <div>
+            <div className="flex items-center mb-1">
+              <Label className="text-sm font-medium text-gray-600 mr-1">Sales Rep</Label>
             </div>
-            
-            <div className="grid grid-cols-2 gap-3">
-              <Input
-                name="shipping.city"
-                className="qb-input"
-                value={customer.shippingAddress.city}
-                onChange={handleCustomerChange}
-                placeholder="City"
-              />
-              <Input
-                name="shipping.state"
-                className="qb-input"
-                value={customer.shippingAddress.state}
-                onChange={handleCustomerChange}
-                placeholder="State / Province"
-              />
-            </div>
-            
-            <div className="grid grid-cols-2 gap-3">
-              <Input
-                name="shipping.zipCode"
-                className="qb-input"
-                value={customer.shippingAddress.zipCode}
-                onChange={handleCustomerChange}
-                placeholder="Zip / Postal Code"
-              />
-              <Input
-                name="shipping.country"
-                className="qb-input"
-                value={customer.shippingAddress.country}
-                onChange={handleCustomerChange}
-                placeholder="Country"
-              />
-            </div>
+            <Input
+              type="text"
+              className="w-full"
+              placeholder=""
+            />
           </div>
-        )}
+          <div>
+            <div className="flex items-center mb-1">
+              <Label className="text-sm font-medium text-gray-600 mr-1">Invoice no.</Label>
+            </div>
+            <Input
+              type="text"
+              className="w-full"
+              value={invoice.invoiceNumber}
+              onChange={(e) => updateCustomer({...customer})}
+              placeholder=""
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

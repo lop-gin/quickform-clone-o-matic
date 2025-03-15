@@ -8,17 +8,19 @@ export interface Address {
 }
 
 export interface Customer {
+  id?: string;
   name: string;
   email: string;
   billingAddress: Address;
-  shippingAddress: Address;
 }
 
 export interface InvoiceItem {
   id: string;
+  serviceDate?: string;
+  product: string;
   description: string;
   quantity: number;
-  unitPrice: number;
+  rate: number;
   amount: number;
 }
 
@@ -28,13 +30,12 @@ export interface InvoiceType {
   dueDate: Date;
   customer: Customer;
   items: InvoiceItem[];
-  notes: string;
+  messageOnInvoice: string;
+  messageOnStatement: string;
   terms: string;
-  discountType: "percentage" | "amount";
-  discountValue: number;
-  taxRate: number;
+  salesRep?: string;
+  tags?: string[];
   subTotal: number;
-  discount: number;
-  tax: number;
   total: number;
+  balanceDue: number;
 }

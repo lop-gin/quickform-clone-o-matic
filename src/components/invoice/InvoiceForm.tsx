@@ -5,9 +5,10 @@ import { CustomerSection } from "./CustomerSection";
 import { InvoiceItems } from "./InvoiceItems";
 import { InvoiceSummary } from "./InvoiceSummary";
 import { InvoiceActions } from "./InvoiceActions";
-import { InvoiceNotes } from "./InvoiceNotes";
+import { InvoiceMessages } from "./InvoiceMessages";
 import { InvoiceType } from "@/types/invoice";
 import { generateInvoiceNumber } from "@/lib/invoice-utils";
+import { InvoiceTags } from "./InvoiceTags";
 
 export const InvoiceForm: React.FC = () => {
   const [invoice, setInvoice] = useState<InvoiceType>({
@@ -24,24 +25,16 @@ export const InvoiceForm: React.FC = () => {
         zipCode: "",
         country: "",
       },
-      shippingAddress: {
-        street: "",
-        city: "",
-        state: "",
-        zipCode: "",
-        country: "",
-      },
     },
     items: [],
-    notes: "",
+    messageOnInvoice: "",
+    messageOnStatement: "",
     terms: "Net 30",
-    discountType: "percentage",
-    discountValue: 0,
-    taxRate: 0,
+    salesRep: "",
+    tags: [],
     subTotal: 0,
-    discount: 0,
-    tax: 0,
     total: 0,
+    balanceDue: 0,
   });
 
   // Function to update invoice state
@@ -51,24 +44,18 @@ export const InvoiceForm: React.FC = () => {
       
       // Recalculate totals
       const subTotal = newInvoice.items.reduce(
-        (sum, item) => sum + item.quantity * item.unitPrice,
+        (sum, item) => sum + item.quantity * item.rate,
         0
       );
       
-      const discount = newInvoice.discountType === "percentage"
-        ? (subTotal * newInvoice.discountValue) / 100
-        : newInvoice.discountValue;
-      
-      const afterDiscount = subTotal - discount;
-      const tax = (afterDiscount * newInvoice.taxRate) / 100;
-      const total = afterDiscount + tax;
+      const total = subTotal;
+      const balanceDue = total;
       
       return {
         ...newInvoice,
         subTotal,
-        discount,
-        tax,
-        total
+        total,
+        balanceDue
       };
     });
   };
@@ -80,9 +67,11 @@ export const InvoiceForm: React.FC = () => {
         ...invoice.items,
         {
           id: Date.now().toString(),
+          serviceDate: "",
+          product: "",
           description: "",
           quantity: 1,
-          unitPrice: 0,
+          rate: 0,
           amount: 0,
         },
       ],
@@ -90,12 +79,12 @@ export const InvoiceForm: React.FC = () => {
   };
 
   // Function to update an item
-  const updateInvoiceItem = (itemId: string, updates: any) => {
+  const updateInvoiceItem = (itemId: string, updates: Partial<InvoiceItem>) => {
     const updatedItems = invoice.items.map((item) => {
       if (item.id === itemId) {
         const updatedItem = { ...item, ...updates };
         // Calculate the amount
-        updatedItem.amount = updatedItem.quantity * updatedItem.unitPrice;
+        updatedItem.amount = updatedItem.quantity * updatedItem.rate;
         return updatedItem;
       }
       return item;
@@ -118,17 +107,24 @@ export const InvoiceForm: React.FC = () => {
   };
 
   return (
-    <div className="bg-white shadow-md rounded-lg overflow-hidden">
+    <div className="bg-white shadow-sm rounded-sm overflow-hidden border border-gray-200">
       <InvoiceHeader 
         invoice={invoice} 
         updateInvoice={updateInvoice} 
       />
       
-      <div className="p-6">
+      <div className="p-4">
         <CustomerSection 
           customer={invoice.customer} 
           updateCustomer={(customer) => updateInvoice({ customer })} 
         />
+        
+        <div className="mb-4">
+          <InvoiceTags 
+            tags={invoice.tags || []} 
+            onTagsUpdate={(tags) => updateInvoice({ tags })} 
+          />
+        </div>
         
         <InvoiceItems 
           items={invoice.items} 
@@ -138,16 +134,15 @@ export const InvoiceForm: React.FC = () => {
         />
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
-          <InvoiceNotes 
-            notes={invoice.notes} 
-            terms={invoice.terms}
-            onNotesChange={(notes) => updateInvoice({ notes })}
-            onTermsChange={(terms) => updateInvoice({ terms })} 
+          <InvoiceMessages 
+            messageOnInvoice={invoice.messageOnInvoice} 
+            messageOnStatement={invoice.messageOnStatement}
+            onMessageOnInvoiceChange={(messageOnInvoice) => updateInvoice({ messageOnInvoice })}
+            onMessageOnStatementChange={(messageOnStatement) => updateInvoice({ messageOnStatement })} 
           />
           
           <InvoiceSummary 
             invoice={invoice} 
-            updateInvoice={updateInvoice} 
           />
         </div>
       </div>

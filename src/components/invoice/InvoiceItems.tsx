@@ -3,7 +3,8 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { InvoiceItem } from "@/types/invoice";
-import { FilePlus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Calendar, ChevronDown, HelpCircle } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface InvoiceItemsProps {
   items: InvoiceItem[];
@@ -24,7 +25,7 @@ export const InvoiceItems: React.FC<InvoiceItemsProps> = ({
     value: string | number
   ) => {
     // For number fields, convert the string value to a number
-    if (field === "quantity" || field === "unitPrice") {
+    if (field === "quantity" || field === "rate") {
       updateItem(itemId, { [field]: parseFloat(value as string) || 0 });
     } else {
       updateItem(itemId, { [field]: value });
@@ -32,89 +33,138 @@ export const InvoiceItems: React.FC<InvoiceItemsProps> = ({
   };
 
   return (
-    <div className="mt-8">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-medium text-gray-900">Items</h2>
-      </div>
-      
+    <div className="mt-4">
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr>
-              <th className="qb-table-header text-left w-2/5">ITEM DESCRIPTION</th>
-              <th className="qb-table-header text-right">QTY</th>
-              <th className="qb-table-header text-right">PRICE</th>
-              <th className="qb-table-header text-right">AMOUNT</th>
-              <th className="qb-table-header text-center w-12"></th>
+            <tr className="text-xs text-gray-600 border-b">
+              <th className="text-center w-8 py-2">#</th>
+              <th className="text-left py-2">SERVICE DATE</th>
+              <th className="text-left py-2">
+                <div className="flex items-center">
+                  <span>PRODUCT/SERVICE</span>
+                  <HelpCircle className="h-4 w-4 text-gray-400 ml-1" />
+                </div>
+              </th>
+              <th className="text-left py-2">DESCRIPTION</th>
+              <th className="text-right py-2">QTY</th>
+              <th className="text-right py-2">RATE</th>
+              <th className="text-right py-2">AMOUNT</th>
+              <th className="text-center w-8 py-2"></th>
             </tr>
           </thead>
           <tbody>
-            {items.map((item) => (
-              <tr key={item.id}>
-                <td className="qb-table-cell">
-                  <Input
-                    className="border-none focus:ring-0 p-1"
-                    value={item.description}
-                    onChange={(e) =>
-                      handleInputChange(item.id, "description", e.target.value)
-                    }
-                    placeholder="Enter item description"
-                  />
+            {items.length === 0 ? (
+              <tr>
+                <td colSpan={8} className="text-center py-4 text-gray-500">
+                  No items yet. Click "Add lines" to add an item.
                 </td>
-                <td className="qb-table-cell">
-                  <Input
-                    className="border-none focus:ring-0 p-1 text-right"
-                    type="number"
-                    value={item.quantity}
-                    onChange={(e) =>
-                      handleInputChange(item.id, "quantity", e.target.value)
-                    }
-                    min="1"
-                    step="1"
-                  />
-                </td>
-                <td className="qb-table-cell">
-                  <div className="relative">
-                    <span className="absolute left-2 top-1 text-gray-500">$</span>
+              </tr>
+            ) : (
+              items.map((item, index) => (
+                <tr key={item.id} className="border-b">
+                  <td className="text-center py-2 text-gray-500">{index + 1}</td>
+                  <td className="py-2 w-32">
+                    <div className="relative">
+                      <Input
+                        className="w-full border-gray-200 h-9"
+                        value={item.serviceDate || ""}
+                        onChange={(e) =>
+                          handleInputChange(item.id, "serviceDate", e.target.value)
+                        }
+                      />
+                      <Button 
+                        variant="ghost" 
+                        className="absolute right-1 top-1 h-7 w-7 p-0"
+                      >
+                        <Calendar className="h-4 w-4 text-gray-500" />
+                      </Button>
+                    </div>
+                  </td>
+                  <td className="py-2">
+                    <div className="relative">
+                      <Button
+                        variant="outline"
+                        className="w-full justify-between h-9 font-normal text-gray-700"
+                      >
+                        <span>Select a product/service</span>
+                        <ChevronDown className="h-4 w-4 opacity-50" />
+                      </Button>
+                    </div>
+                  </td>
+                  <td className="py-2">
                     <Input
-                      className="border-none focus:ring-0 p-1 pl-5 text-right"
-                      type="number"
-                      value={item.unitPrice}
+                      className="border-gray-200 h-9"
+                      value={item.description}
                       onChange={(e) =>
-                        handleInputChange(item.id, "unitPrice", e.target.value)
+                        handleInputChange(item.id, "description", e.target.value)
+                      }
+                    />
+                  </td>
+                  <td className="py-2">
+                    <Input
+                      className="border-gray-200 text-right h-9"
+                      type="number"
+                      value={item.quantity}
+                      onChange={(e) =>
+                        handleInputChange(item.id, "quantity", e.target.value)
+                      }
+                      min="1"
+                      step="1"
+                    />
+                  </td>
+                  <td className="py-2">
+                    <Input
+                      className="border-gray-200 text-right h-9"
+                      type="number"
+                      value={item.rate}
+                      onChange={(e) =>
+                        handleInputChange(item.id, "rate", e.target.value)
                       }
                       min="0"
                       step="0.01"
                     />
-                  </div>
-                </td>
-                <td className="qb-table-cell text-right">
-                  ${(item.quantity * item.unitPrice).toFixed(2)}
-                </td>
-                <td className="qb-table-cell">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 p-0 text-gray-500"
-                    onClick={() => removeItem(item.id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </td>
-              </tr>
-            ))}
+                  </td>
+                  <td className="py-2 text-right">
+                    {(item.quantity * item.rate).toFixed(2)}
+                  </td>
+                  <td className="py-2 text-center">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-7 w-7 p-0 text-gray-500"
+                      onClick={() => removeItem(item.id)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
       
-      <div className="mt-4">
+      <div className="mt-4 flex space-x-2">
         <Button
           variant="outline"
-          className="text-qb-blue border-dashed border-qb-blue hover:bg-qb-blue-light"
+          className="text-gray-700 border-gray-300 h-8 text-sm"
           onClick={addItem}
         >
-          <FilePlus className="mr-2 h-4 w-4" />
-          Add Line
+          <Plus className="mr-1 h-4 w-4" />
+          Add lines
+        </Button>
+        <Button
+          variant="outline"
+          className="text-gray-700 border-gray-300 h-8 text-sm"
+        >
+          Clear all lines
+        </Button>
+        <Button
+          variant="outline"
+          className="text-gray-700 border-gray-300 h-8 text-sm"
+        >
+          Add subtotal
         </Button>
       </div>
     </div>
