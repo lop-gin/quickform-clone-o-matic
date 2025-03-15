@@ -5,7 +5,7 @@ import { AppLayout } from "@/components/layout/AppLayout";
 const Index = () => {
   return (
     <AppLayout>
-      <div className="max-w-[1000px] mx-auto">
+      <div className="w-full mx-auto">
         <InvoiceForm />
       </div>
     </AppLayout>
