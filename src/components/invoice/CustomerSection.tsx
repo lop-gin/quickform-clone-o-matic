@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, HelpCircle } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
+import { Separator } from "@/components/ui/separator";
 
 interface CustomerSectionProps {
   customer: Customer;
@@ -41,7 +42,7 @@ export const CustomerSection: React.FC<CustomerSectionProps> = ({
   };
   
   return (
-    <div className="border-b border-gray-200 pb-5">
+    <div className="pb-5">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <div className="flex items-center mb-1">
@@ -77,7 +78,7 @@ export const CustomerSection: React.FC<CustomerSectionProps> = ({
             id="email"
             name="email"
             type="email"
-            className="w-full text-xs"
+            className="w-full text-xs h-8"
             value={customer.email}
             onChange={handleCustomerChange}
             placeholder="Separate emails with a comma"
@@ -89,7 +90,7 @@ export const CustomerSection: React.FC<CustomerSectionProps> = ({
             </div>
             <Input
               type="text"
-              className="w-full text-xs"
+              className="w-full text-xs h-8"
               placeholder=""
               value={invoice.salesRep || ""}
               onChange={(e) => updateInvoice({ salesRep: e.target.value })}
@@ -97,6 +98,7 @@ export const CustomerSection: React.FC<CustomerSectionProps> = ({
           </div>
         </div>
       </div>
+      <Separator className="mt-5 mb-0 w-full bg-gray-200" />
     </div>
   );
 };

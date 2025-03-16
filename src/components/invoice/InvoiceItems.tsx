@@ -202,10 +202,7 @@ export const InvoiceItems: React.FC<InvoiceItemsProps> = ({
                   <Button
                     variant="ghost"
                     size="icon"
-                    className={cn(
-                      "h-6 w-6 p-0 text-gray-500",
-                      items.length === 1 ? "invisible" : "visible"
-                    )}
+                    className="h-6 w-6 p-0 text-gray-500"
                     onClick={(e) => {
                       e.stopPropagation();
                       removeItem(item.id);

@@ -33,7 +33,7 @@ export const InvoiceDateFields: React.FC<InvoiceDateFieldsProps> = ({
   onDueDateChange,
 }) => {
   return (
-    <div className="space-y-3 border-b border-gray-200 pb-5">
+    <div className="space-y-3 pb-5">
       <div>
         <div className="flex items-center mb-1">
           <Label className="text-xs font-medium text-gray-600 mr-1">Invoice date</Label>
