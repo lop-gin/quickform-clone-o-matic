@@ -21,6 +21,7 @@ interface InvoiceDateFieldsProps {
   terms: string;
   onInvoiceDateChange: (date: Date) => void;
   onTermsChange: (terms: string) => void;
+  onDueDateChange: (date: Date) => void;
 }
 
 export const InvoiceDateFields: React.FC<InvoiceDateFieldsProps> = ({
@@ -29,23 +30,26 @@ export const InvoiceDateFields: React.FC<InvoiceDateFieldsProps> = ({
   terms,
   onInvoiceDateChange,
   onTermsChange,
+  onDueDateChange,
 }) => {
   return (
-    <div className="mb-6 grid grid-cols-3 gap-4">
+    <div className="grid grid-cols-2 gap-3">
       <div>
-        <Label className="text-xs font-medium text-gray-700">INVOICE DATE</Label>
+        <div className="flex items-center mb-1">
+          <Label className="text-xs font-medium text-gray-600 mr-1">Invoice date</Label>
+        </div>
         <Popover>
           <PopoverTrigger asChild>
             <Button
               variant="outline"
               className={cn(
-                "w-full justify-start text-left font-normal h-9 text-xs",
+                "w-full justify-start text-left font-normal h-8 text-xs",
                 !invoiceDate && "text-muted-foreground"
               )}
             >
               <CalendarIcon className="mr-2 h-3.5 w-3.5" />
               {invoiceDate ? (
-                format(invoiceDate, "PPP")
+                format(invoiceDate, "dd/MM/yyyy")
               ) : (
                 <span>Pick a date</span>
               )}
@@ -63,9 +67,43 @@ export const InvoiceDateFields: React.FC<InvoiceDateFieldsProps> = ({
       </div>
       
       <div>
-        <Label className="text-xs font-medium text-gray-700">TERMS</Label>
+        <div className="flex items-center mb-1">
+          <Label className="text-xs font-medium text-gray-600 mr-1">Due date</Label>
+        </div>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className={cn(
+                "w-full justify-start text-left font-normal h-8 text-xs",
+                !dueDate && "text-muted-foreground"
+              )}
+            >
+              <CalendarIcon className="mr-2 h-3.5 w-3.5" />
+              {dueDate ? (
+                format(dueDate, "dd/MM/yyyy")
+              ) : (
+                <span>Pick a date</span>
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start">
+            <Calendar
+              mode="single"
+              selected={dueDate}
+              onSelect={(date) => date && onDueDateChange(date)}
+              initialFocus
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
+      
+      <div className="col-span-2">
+        <div className="flex items-center mb-1">
+          <Label className="text-xs font-medium text-gray-600 mr-1">Terms</Label>
+        </div>
         <Select value={terms} onValueChange={onTermsChange}>
-          <SelectTrigger className="h-9 text-xs">
+          <SelectTrigger className="h-8 text-xs w-full">
             <SelectValue placeholder="Select terms" />
           </SelectTrigger>
           <SelectContent>
@@ -76,36 +114,6 @@ export const InvoiceDateFields: React.FC<InvoiceDateFieldsProps> = ({
             <SelectItem value="Custom">Custom</SelectItem>
           </SelectContent>
         </Select>
-      </div>
-      
-      <div>
-        <Label className="text-xs font-medium text-gray-700">DUE DATE</Label>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              className={cn(
-                "w-full justify-start text-left font-normal h-9 text-xs",
-                !dueDate && "text-muted-foreground"
-              )}
-            >
-              <CalendarIcon className="mr-2 h-3.5 w-3.5" />
-              {dueDate ? (
-                format(dueDate, "PPP")
-              ) : (
-                <span>Pick a date</span>
-              )}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
-            <Calendar
-              mode="single"
-              selected={dueDate}
-              onSelect={(date) => date && onInvoiceDateChange(date)}
-              initialFocus
-            />
-          </PopoverContent>
-        </Popover>
       </div>
     </div>
   );

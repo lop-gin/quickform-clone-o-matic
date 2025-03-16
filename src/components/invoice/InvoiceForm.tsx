@@ -8,6 +8,7 @@ import { InvoiceActions } from "./InvoiceActions";
 import { InvoiceDateFields } from "./InvoiceDateFields";
 import { InvoiceMessage } from "./InvoiceMessage";
 import { useInvoiceForm } from "@/hooks/useInvoiceForm";
+import { Button } from "@/components/ui/button";
 
 export const InvoiceForm: React.FC = () => {
   const {
@@ -34,13 +35,21 @@ export const InvoiceForm: React.FC = () => {
           updateInvoice={updateInvoice}
         />
         
-        <InvoiceDateFields 
-          invoiceDate={invoice.invoiceDate}
-          dueDate={invoice.dueDate}
-          terms={invoice.terms}
-          onInvoiceDateChange={(date) => updateInvoice({ invoiceDate: date })}
-          onTermsChange={updateTerms}
-        />
+        <div className="grid grid-cols-3 gap-4 mb-6">
+          <div className="col-span-2">
+            {/* Empty space for alignment with the 3rd column */}
+          </div>
+          <div>
+            <InvoiceDateFields 
+              invoiceDate={invoice.invoiceDate}
+              dueDate={invoice.dueDate}
+              terms={invoice.terms}
+              onInvoiceDateChange={(date) => updateInvoice({ invoiceDate: date })}
+              onTermsChange={updateTerms}
+              onDueDateChange={(date) => updateInvoice({ dueDate: date })}
+            />
+          </div>
+        </div>
         
         <InvoiceItems 
           items={invoice.items} 

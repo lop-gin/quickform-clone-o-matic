@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, HelpCircle } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
 import { format } from "date-fns";
 
 interface CustomerSectionProps {
@@ -83,78 +82,19 @@ export const CustomerSection: React.FC<CustomerSectionProps> = ({
           onChange={handleCustomerChange}
           placeholder="Separate emails with a comma"
         />
-        <div className="flex items-center space-x-1 mt-2">
-          <Checkbox id="sendLater" className="h-3 w-3" />
-          <Label htmlFor="sendLater" className="text-xs text-gray-600">
-            Send later
-          </Label>
-          <HelpCircle className="h-3 w-3 text-gray-400" />
-        </div>
       </div>
       
       <div>
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <div className="flex items-center mb-1">
-              <Label className="text-xs font-medium text-gray-600 mr-1">Invoice date</Label>
-            </div>
-            <Input
-              type="text"
-              className="w-full text-xs"
-              value={format(invoice.invoiceDate, "dd/MM/yyyy")}
-              placeholder="DD/MM/YYYY"
-            />
-          </div>
-          <div>
-            <div className="flex items-center mb-1">
-              <Label className="text-xs font-medium text-gray-600 mr-1">Due date</Label>
-            </div>
-            <Input
-              type="text"
-              className="w-full text-xs"
-              value={format(invoice.dueDate, "dd/MM/yyyy")}
-              placeholder="DD/MM/YYYY"
-            />
-          </div>
+        <div className="flex items-center mb-1">
+          <Label className="text-xs font-medium text-gray-600 mr-1">Sales Rep</Label>
         </div>
-        
-        <div className="mt-3">
-          <div className="flex items-center mb-1">
-            <Label className="text-xs font-medium text-gray-600 mr-1">Terms</Label>
-            <HelpCircle className="h-3 w-3 text-gray-400" />
-          </div>
-          <div className="relative">
-            <Button variant="outline" className="w-full justify-between font-normal text-gray-700 text-xs h-8">
-              <span>Net 30</span>
-              <ChevronDown className="h-3 w-3 opacity-50" />
-            </Button>
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-2 gap-3 mt-3">
-          <div>
-            <div className="flex items-center mb-1">
-              <Label className="text-xs font-medium text-gray-600 mr-1">Sales Rep</Label>
-            </div>
-            <Input
-              type="text"
-              className="w-full text-xs"
-              placeholder=""
-            />
-          </div>
-          <div>
-            <div className="flex items-center mb-1">
-              <Label className="text-xs font-medium text-gray-600 mr-1">Invoice no.</Label>
-            </div>
-            <Input
-              type="text"
-              className="w-full text-xs"
-              value={invoice.invoiceNumber}
-              onChange={(e) => updateInvoice({ invoiceNumber: e.target.value })}
-              placeholder=""
-            />
-          </div>
-        </div>
+        <Input
+          type="text"
+          className="w-full text-xs"
+          placeholder=""
+          value={invoice.salesRep || ""}
+          onChange={(e) => updateInvoice({ salesRep: e.target.value })}
+        />
       </div>
     </div>
   );

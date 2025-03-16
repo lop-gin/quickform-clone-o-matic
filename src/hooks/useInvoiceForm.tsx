@@ -130,9 +130,10 @@ export function useInvoiceForm() {
 
   // Function to update terms and recalculate due date
   const updateTerms = (terms: string) => {
+    const newDueDate = calculateDueDate(invoice.invoiceDate, terms);
     updateInvoice({ 
       terms,
-      dueDate: calculateDueDate(invoice.invoiceDate, terms)
+      dueDate: newDueDate
     });
   };
 

@@ -84,7 +84,7 @@ export const InvoiceItems: React.FC<InvoiceItemsProps> = ({
               <tr 
                 key={item.id} 
                 className={cn(
-                  "border-b hover:bg-gray-50 group/row transition-colors",
+                  "border-b hover:bg-gray-50 transition-colors",
                   selectedRow === item.id ? "bg-blue-50" : ""
                 )}
                 onClick={() => setSelectedRow(item.id)}
@@ -94,14 +94,17 @@ export const InvoiceItems: React.FC<InvoiceItemsProps> = ({
                   <div className="relative">
                     <Input
                       className={cn(
-                        "w-full border-gray-200 h-8 focus:z-10",
-                        selectedRow === item.id ? "border-blue-400 ring-0 focus:ring-0" : ""
+                        "w-full border-gray-200 h-8 focus:ring-0 focus:ring-offset-0 focus:border-gray-300",
+                        selectedRow === item.id ? "ring-0 border-gray-300" : ""
                       )}
                       value={item.serviceDate || ""}
                       onChange={(e) =>
                         handleInputChange(item.id, "serviceDate", e.target.value)
                       }
-                      onClick={(e) => e.stopPropagation()}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedRow(item.id);
+                      }}
                     />
                     <Button 
                       variant="ghost" 
@@ -120,10 +123,13 @@ export const InvoiceItems: React.FC<InvoiceItemsProps> = ({
                     >
                       <SelectTrigger 
                         className={cn(
-                          "w-full h-8 font-normal text-gray-700 focus:z-10",
-                          selectedRow === item.id ? "border-blue-400 ring-0 focus:ring-0" : ""
+                          "w-full h-8 font-normal text-gray-700 focus:ring-0 focus:border-gray-300",
+                          selectedRow === item.id ? "ring-0 border-gray-300" : ""
                         )}
-                        onClick={(e) => e.stopPropagation()}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedRow(item.id);
+                        }}
                       >
                         <SelectValue placeholder="Select a product/service" />
                       </SelectTrigger>
@@ -138,21 +144,24 @@ export const InvoiceItems: React.FC<InvoiceItemsProps> = ({
                 <td className="py-1">
                   <Input
                     className={cn(
-                      "border-gray-200 h-8 focus:z-10",
-                      selectedRow === item.id ? "border-blue-400 ring-0 focus:ring-0" : ""
+                      "border-gray-200 h-8 focus:ring-0 focus:ring-offset-0 focus:border-gray-300",
+                      selectedRow === item.id ? "ring-0 border-gray-300" : ""
                     )}
                     value={item.description}
                     onChange={(e) =>
                       handleInputChange(item.id, "description", e.target.value)
                     }
-                    onClick={(e) => e.stopPropagation()}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedRow(item.id);
+                    }}
                   />
                 </td>
                 <td className="py-1">
                   <Input
                     className={cn(
-                      "border-gray-200 text-right h-8 focus:z-10",
-                      selectedRow === item.id ? "border-blue-400 ring-0 focus:ring-0" : ""
+                      "border-gray-200 text-right h-8 focus:ring-0 focus:ring-offset-0 focus:border-gray-300",
+                      selectedRow === item.id ? "ring-0 border-gray-300" : ""
                     )}
                     type="number"
                     value={item.quantity}
@@ -161,14 +170,17 @@ export const InvoiceItems: React.FC<InvoiceItemsProps> = ({
                     }
                     min="1"
                     step="1"
-                    onClick={(e) => e.stopPropagation()}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedRow(item.id);
+                    }}
                   />
                 </td>
                 <td className="py-1">
                   <Input
                     className={cn(
-                      "border-gray-200 text-right h-8 focus:z-10",
-                      selectedRow === item.id ? "border-blue-400 ring-0 focus:ring-0" : ""
+                      "border-gray-200 text-right h-8 focus:ring-0 focus:ring-offset-0 focus:border-gray-300",
+                      selectedRow === item.id ? "ring-0 border-gray-300" : ""
                     )}
                     type="number"
                     value={item.rate}
@@ -177,7 +189,10 @@ export const InvoiceItems: React.FC<InvoiceItemsProps> = ({
                     }
                     min="0"
                     step="0.01"
-                    onClick={(e) => e.stopPropagation()}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedRow(item.id);
+                    }}
                   />
                 </td>
                 <td className="py-1 text-right">
@@ -188,8 +203,8 @@ export const InvoiceItems: React.FC<InvoiceItemsProps> = ({
                     variant="ghost"
                     size="icon"
                     className={cn(
-                      "h-6 w-6 p-0 text-gray-500 opacity-0 group-hover/row:opacity-100 transition-opacity",
-                      items.length === 1 ? "hidden" : ""
+                      "h-6 w-6 p-0 text-gray-500",
+                      items.length === 1 ? "invisible" : "visible"
                     )}
                     onClick={(e) => {
                       e.stopPropagation();
