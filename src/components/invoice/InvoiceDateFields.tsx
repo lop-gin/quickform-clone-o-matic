@@ -33,7 +33,7 @@ export const InvoiceDateFields: React.FC<InvoiceDateFieldsProps> = ({
   onDueDateChange,
 }) => {
   return (
-    <div className="grid grid-cols-2 gap-3">
+    <div className="space-y-3 border-b border-gray-200 pb-5">
       <div>
         <div className="flex items-center mb-1">
           <Label className="text-xs font-medium text-gray-600 mr-1">Invoice date</Label>
@@ -68,6 +68,24 @@ export const InvoiceDateFields: React.FC<InvoiceDateFieldsProps> = ({
       
       <div>
         <div className="flex items-center mb-1">
+          <Label className="text-xs font-medium text-gray-600 mr-1">Terms</Label>
+        </div>
+        <Select value={terms} onValueChange={onTermsChange}>
+          <SelectTrigger className="h-8 text-xs w-full">
+            <SelectValue placeholder="Select terms" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Due on receipt">Due on receipt</SelectItem>
+            <SelectItem value="Net 15">Net 15</SelectItem>
+            <SelectItem value="Net 30">Net 30</SelectItem>
+            <SelectItem value="Net 60">Net 60</SelectItem>
+            <SelectItem value="Custom">Custom</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      
+      <div>
+        <div className="flex items-center mb-1">
           <Label className="text-xs font-medium text-gray-600 mr-1">Due date</Label>
         </div>
         <Popover>
@@ -96,24 +114,6 @@ export const InvoiceDateFields: React.FC<InvoiceDateFieldsProps> = ({
             />
           </PopoverContent>
         </Popover>
-      </div>
-      
-      <div className="col-span-2">
-        <div className="flex items-center mb-1">
-          <Label className="text-xs font-medium text-gray-600 mr-1">Terms</Label>
-        </div>
-        <Select value={terms} onValueChange={onTermsChange}>
-          <SelectTrigger className="h-8 text-xs w-full">
-            <SelectValue placeholder="Select terms" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="Due on receipt">Due on receipt</SelectItem>
-            <SelectItem value="Net 15">Net 15</SelectItem>
-            <SelectItem value="Net 30">Net 30</SelectItem>
-            <SelectItem value="Net 60">Net 60</SelectItem>
-            <SelectItem value="Custom">Custom</SelectItem>
-          </SelectContent>
-        </Select>
       </div>
     </div>
   );

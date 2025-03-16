@@ -8,7 +8,6 @@ import { InvoiceActions } from "./InvoiceActions";
 import { InvoiceDateFields } from "./InvoiceDateFields";
 import { InvoiceMessage } from "./InvoiceMessage";
 import { useInvoiceForm } from "@/hooks/useInvoiceForm";
-import { Button } from "@/components/ui/button";
 
 export const InvoiceForm: React.FC = () => {
   const {
@@ -28,16 +27,14 @@ export const InvoiceForm: React.FC = () => {
       <InvoiceHeader />
       
       <div className="p-4">
-        <CustomerSection 
-          customer={invoice.customer}
-          invoice={invoice}
-          updateCustomer={updateCustomer} 
-          updateInvoice={updateInvoice}
-        />
-        
-        <div className="grid grid-cols-3 gap-4 mb-6">
-          <div className="col-span-2">
-            {/* Empty space for alignment with the 3rd column */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div className="md:col-span-2">
+            <CustomerSection 
+              customer={invoice.customer}
+              invoice={invoice}
+              updateCustomer={updateCustomer} 
+              updateInvoice={updateInvoice}
+            />
           </div>
           <div>
             <InvoiceDateFields 
