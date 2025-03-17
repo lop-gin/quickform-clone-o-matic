@@ -1,7 +1,7 @@
 
-import { InvoiceType } from "@/types/invoice";
+import { InvoiceType } from "@/types/document";
 import { useDocumentForm } from "./useDocumentForm";
-import { generateInvoiceNumber, calculateDueDate } from "@/lib/invoice-utils";
+import { generateInvoiceNumber, calculateDueDate } from "@/lib/document-utils";
 
 export function useInvoiceForm() {
   const initialInvoice: InvoiceType = {

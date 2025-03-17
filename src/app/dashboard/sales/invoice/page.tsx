@@ -1,13 +1,11 @@
 
 import React from "react";
-import { InvoiceForm } from "@/components/forms/invoice/InvoiceForm";
+import { InvoiceForm } from "@/components/forms/InvoiceForm";
 
-const InvoicePage = () => {
+export default function InvoicePage() {
   return (
     <div className="bg-gray-50 min-h-screen w-full">
       <InvoiceForm />
     </div>
   );
-};
-
-export default InvoicePage;
+}

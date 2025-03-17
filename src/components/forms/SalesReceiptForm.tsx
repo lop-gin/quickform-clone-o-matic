@@ -1,13 +1,13 @@
 
 import React from "react";
-import { FormHeader } from "../shared/FormHeader";
-import { CustomerSection } from "../shared/CustomerSection";
-import { ItemsTable } from "../shared/ItemsTable";
-import { FormMessage } from "../shared/FormMessage";
-import { FormActions } from "../shared/FormActions";
-import { DocumentTotal } from "../shared/DocumentTotal";
+import { FormHeader } from "./FormHeader";
+import { CustomerSection } from "./CustomerSection";
+import { ItemsTable } from "./ItemsTable";
+import { FormMessage } from "./FormMessage";
+import { FormActions } from "./FormActions";
+import { DocumentTotal } from "./DocumentTotal";
 import { useSalesReceiptForm } from "@/hooks/useSalesReceiptForm";
-import { DateField, SalesRepField } from "../shared/DateFields";
+import { DateField, SalesRepField } from "./DateFields";
 
 export const SalesReceiptForm: React.FC = () => {
   const {

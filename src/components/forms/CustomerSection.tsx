@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Customer, Document } from "@/types/invoice";
+import { Customer, Document } from "@/types/document";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";

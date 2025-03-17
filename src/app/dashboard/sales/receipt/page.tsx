@@ -1,13 +1,11 @@
 
 import React from "react";
-import { SalesReceiptForm } from "@/components/forms/sales-receipt/SalesReceiptForm";
+import { SalesReceiptForm } from "@/components/forms/SalesReceiptForm";
 
-const SalesReceiptPage = () => {
+export default function SalesReceiptPage() {
   return (
     <div className="bg-gray-50 min-h-screen w-full">
       <SalesReceiptForm />
     </div>
   );
-};
-
-export default SalesReceiptPage;
+}

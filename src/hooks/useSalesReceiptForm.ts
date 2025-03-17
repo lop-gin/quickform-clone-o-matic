@@ -1,11 +1,11 @@
 
-import { SalesReceiptType } from "@/types/invoice";
+import { SalesReceiptType } from "@/types/document";
 import { useDocumentForm } from "./useDocumentForm";
-import { generateInvoiceNumber } from "@/lib/invoice-utils";
+import { generateReceiptNumber } from "@/lib/document-utils";
 
 export function useSalesReceiptForm() {
   const initialSalesReceipt: SalesReceiptType = {
-    receiptNumber: generateInvoiceNumber().replace("INV", "REC"),
+    receiptNumber: generateReceiptNumber(),
     saleDate: new Date(),
     customer: {
       name: "",

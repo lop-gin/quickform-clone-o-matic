@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Document, DocumentItem, Customer, OtherFees } from "@/types/invoice";
+import { Document, DocumentItem, Customer, OtherFees } from "@/types/document";
 
 export function useDocumentForm<T extends Document>(initialState: T) {
   const [document, setDocument] = useState<T>(initialState);

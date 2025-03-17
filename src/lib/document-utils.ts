@@ -33,3 +33,12 @@ export const calculateDueDate = (invoiceDate: Date, terms: string): Date => {
   
   return date;
 };
+
+/**
+ * Generates a random receipt number with a specific format: REC-XXXXX
+ * where XXXXX is a random 5-digit number
+ */
+export const generateReceiptNumber = (): string => {
+  const random = Math.floor(Math.random() * 90000) + 10000; // 5-digit random number
+  return `REC-${random}`;
+};
