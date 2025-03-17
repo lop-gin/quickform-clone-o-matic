@@ -1,6 +1,6 @@
 
 import React from "react";
-import { InvoiceType } from "@/types/invoice";
+import { InvoiceType } from "@/types/document";
 
 interface InvoiceSummaryProps {
   invoice: InvoiceType;

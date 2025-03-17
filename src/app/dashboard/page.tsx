@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { FileText, Receipt } from "lucide-react";
 
 export default function DashboardPage() {
@@ -13,13 +13,13 @@ export default function DashboardPage() {
         <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
           <h2 className="text-lg font-medium mb-4">Create New Document</h2>
           <div className="flex flex-col space-y-3">
-            <Link href="/dashboard/sales/invoice">
+            <Link to="/dashboard/sales/invoice">
               <Button className="w-full justify-start" variant="outline">
                 <FileText className="h-4 w-4 mr-2" />
                 Create Invoice
               </Button>
             </Link>
-            <Link href="/dashboard/sales/receipt">
+            <Link to="/dashboard/sales/receipt">
               <Button className="w-full justify-start" variant="outline">
                 <Receipt className="h-4 w-4 mr-2" />
                 Create Sales Receipt
