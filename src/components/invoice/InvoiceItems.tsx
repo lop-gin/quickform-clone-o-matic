@@ -2,6 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { InvoiceItem, OtherFees } from "@/types/invoice";
 import { Plus, Trash2, Calendar, ChevronDown, HelpCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
