@@ -15,7 +15,7 @@ export interface Customer {
   billingAddress: Address;
 }
 
-export interface InvoiceItem {
+export interface DocumentItem {
   id: string;
   serviceDate?: string;
   category?: string;
@@ -34,19 +34,30 @@ export interface OtherFees {
   amount: number;
 }
 
-export interface InvoiceType {
-  invoiceNumber: string;
-  invoiceDate: Date;
-  dueDate: Date;
+// Base document type that can be extended by specific document types
+export interface Document {
   customer: Customer;
-  items: InvoiceItem[];
+  items: DocumentItem[];
   messageOnInvoice: string;
   messageOnStatement: string;
-  terms: string;
   salesRep?: string;
   tags?: string[];
   subTotal: number;
   total: number;
   balanceDue: number;
   otherFees?: OtherFees;
+}
+
+// Invoice specific fields
+export interface InvoiceType extends Document {
+  invoiceNumber: string;
+  invoiceDate: Date;
+  dueDate: Date;
+  terms: string;
+}
+
+// Sales Receipt specific fields
+export interface SalesReceiptType extends Document {
+  receiptNumber: string;
+  saleDate: Date;
 }
