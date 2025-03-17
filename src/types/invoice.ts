@@ -11,6 +11,7 @@ export interface Customer {
   id?: string;
   name: string;
   email: string;
+  company?: string;
   billingAddress: Address;
 }
 
@@ -28,6 +29,11 @@ export interface InvoiceItem {
   amount: number;
 }
 
+export interface OtherFees {
+  description: string;
+  amount: number;
+}
+
 export interface InvoiceType {
   invoiceNumber: string;
   invoiceDate: Date;
@@ -42,4 +48,5 @@ export interface InvoiceType {
   subTotal: number;
   total: number;
   balanceDue: number;
+  otherFees?: OtherFees;
 }

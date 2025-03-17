@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { InvoiceType, InvoiceItem, Customer } from "@/types/invoice";
+import { InvoiceType, InvoiceItem, Customer, OtherFees } from "@/types/invoice";
 import { generateInvoiceNumber, calculateDueDate } from "@/lib/invoice-utils";
 
 export function useInvoiceForm() {
@@ -11,6 +11,7 @@ export function useInvoiceForm() {
     customer: {
       name: "",
       email: "",
+      company: "",
       billingAddress: {
         street: "",
         city: "",
@@ -42,6 +43,10 @@ export function useInvoiceForm() {
     subTotal: 0,
     total: 0,
     balanceDue: 0,
+    otherFees: {
+      description: "",
+      amount: 0
+    }
   });
 
   // Function to update invoice state
@@ -75,6 +80,17 @@ export function useInvoiceForm() {
   // Function to update customer
   const updateCustomer = (customer: Customer) => {
     updateInvoice({ customer });
+  };
+
+  // Function to update other fees
+  const updateOtherFees = (updates: Partial<OtherFees>) => {
+    setInvoice((prev) => {
+      const newOtherFees = { ...(prev.otherFees || { description: "", amount: 0 }), ...updates };
+      return {
+        ...prev,
+        otherFees: newOtherFees
+      };
+    });
   };
 
   // Function to add a new item
@@ -169,6 +185,7 @@ export function useInvoiceForm() {
     removeInvoiceItem,
     clearAllItems,
     updateTerms,
+    updateOtherFees,
     saveInvoice
   };
 }

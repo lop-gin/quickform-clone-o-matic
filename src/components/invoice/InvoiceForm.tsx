@@ -18,7 +18,8 @@ export const InvoiceForm: React.FC = () => {
     removeInvoiceItem,
     clearAllItems,
     updateTerms,
-    saveInvoice
+    saveInvoice,
+    updateOtherFees
   } = useInvoiceForm();
 
   return (
@@ -28,8 +29,8 @@ export const InvoiceForm: React.FC = () => {
       <div className="p-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div className="md:col-span-2">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="md:col-span-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
                 <CustomerSection 
                   customer={invoice.customer}
                   invoice={invoice}
@@ -42,9 +43,11 @@ export const InvoiceForm: React.FC = () => {
                   invoiceDate={invoice.invoiceDate}
                   dueDate={invoice.dueDate}
                   terms={invoice.terms}
+                  salesRep={invoice.salesRep || ""}
                   onInvoiceDateChange={(date) => updateInvoice({ invoiceDate: date })}
                   onTermsChange={updateTerms}
                   onDueDateChange={(date) => updateInvoice({ dueDate: date })}
+                  onSalesRepChange={(rep) => updateInvoice({ salesRep: rep })}
                 />
               </div>
             </div>
@@ -55,21 +58,13 @@ export const InvoiceForm: React.FC = () => {
                 <div>
                   <div className="text-xs text-gray-500">Total Amount</div>
                   <div className="text-2xl font-bold text-gray-800">
-                    Ksh{invoice.items.reduce((sum, item) => {
-                      const itemAmount = (item.quantity || 0) * (item.unitPrice || 0);
-                      const taxAmount = itemAmount * ((item.taxPercent || 0) / 100);
-                      return sum + itemAmount + taxAmount;
-                    }, 0).toFixed(2)}
+                    Ksh{(invoice.total + (invoice.otherFees?.amount || 0)).toFixed(2)}
                   </div>
                 </div>
                 <div>
                   <div className="text-xs text-gray-500">Balance Due</div>
                   <div className="text-xl font-bold text-gray-800">
-                    Ksh{invoice.items.reduce((sum, item) => {
-                      const itemAmount = (item.quantity || 0) * (item.unitPrice || 0);
-                      const taxAmount = itemAmount * ((item.taxPercent || 0) / 100);
-                      return sum + itemAmount + taxAmount;
-                    }, 0).toFixed(2)}
+                    Ksh{(invoice.balanceDue + (invoice.otherFees?.amount || 0)).toFixed(2)}
                   </div>
                 </div>
               </div>
@@ -77,13 +72,17 @@ export const InvoiceForm: React.FC = () => {
           </div>
         </div>
         
-        <InvoiceItems 
-          items={invoice.items} 
-          addItem={addInvoiceItem} 
-          updateItem={updateInvoiceItem} 
-          removeItem={removeInvoiceItem}
-          clearAllItems={clearAllItems}
-        />
+        <div className="bg-white rounded-md shadow-sm p-4 mb-6">
+          <InvoiceItems 
+            items={invoice.items} 
+            addItem={addInvoiceItem} 
+            updateItem={updateInvoiceItem} 
+            removeItem={removeInvoiceItem}
+            clearAllItems={clearAllItems}
+            otherFees={invoice.otherFees || { description: "", amount: 0 }}
+            updateOtherFees={updateOtherFees}
+          />
+        </div>
         
         <div className="mt-8">
           <InvoiceMessage 

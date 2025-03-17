@@ -44,16 +44,34 @@ export const CustomerSection: React.FC<CustomerSectionProps> = ({
   return (
     <div className="pb-5">
       <div className="space-y-3">
-        <div>
-          <div className="flex items-center mb-1">
-            <Label htmlFor="customer" className="text-xs font-medium text-gray-600 mr-1">Customer</Label>
-            <HelpCircle className="h-3 w-3 text-gray-400" />
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <div className="flex items-center mb-1">
+              <Label htmlFor="customer" className="text-xs font-medium text-gray-600 mr-1">Customer</Label>
+              <HelpCircle className="h-3 w-3 text-gray-400" />
+            </div>
+            <div className="relative">
+              <Button variant="outline" className="w-full justify-between font-normal text-gray-700 text-xs h-9">
+                <span>Select a customer</span>
+                <ChevronDown className="h-3 w-3 opacity-50" />
+              </Button>
+            </div>
           </div>
-          <div className="relative">
-            <Button variant="outline" className="w-full justify-between font-normal text-gray-700 text-xs h-8">
-              <span>Select a customer</span>
-              <ChevronDown className="h-3 w-3 opacity-50" />
-            </Button>
+          
+          <div>
+            <div className="flex items-center mb-1">
+              <Label htmlFor="company" className="text-xs font-medium text-gray-600 mr-1">Company</Label>
+              <HelpCircle className="h-3 w-3 text-gray-400" />
+            </div>
+            <Input
+              id="company"
+              name="company"
+              type="text"
+              className="w-full text-xs h-9"
+              value={customer.company || ""}
+              onChange={handleCustomerChange}
+              placeholder="Company name"
+            />
           </div>
         </div>
 
@@ -66,23 +84,10 @@ export const CustomerSection: React.FC<CustomerSectionProps> = ({
             id="email"
             name="email"
             type="email"
-            className="w-full text-xs h-8"
+            className="w-full text-xs h-9"
             value={customer.email}
             onChange={handleCustomerChange}
             placeholder="Separate emails with a comma"
-          />
-        </div>
-        
-        <div>
-          <div className="flex items-center mb-1">
-            <Label className="text-xs font-medium text-gray-600 mr-1">Sales Rep</Label>
-          </div>
-          <Input
-            type="text"
-            className="w-full text-xs h-8"
-            placeholder=""
-            value={invoice.salesRep || ""}
-            onChange={(e) => updateInvoice({ salesRep: e.target.value })}
           />
         </div>
 

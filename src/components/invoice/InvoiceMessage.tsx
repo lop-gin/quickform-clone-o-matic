@@ -17,7 +17,7 @@ export const InvoiceMessage: React.FC<InvoiceMessageProps> = ({
       <Label className="text-xs font-medium text-gray-700">MESSAGE ON INVOICE</Label>
       <div className="mt-1">
         <Textarea 
-          className="min-h-[80px] resize-none text-xs"
+          className="min-h-[120px] resize-none text-xs"
           value={message}
           onChange={(e) => onChange(e.target.value)}
           placeholder="Enter a message to be displayed on the invoice"
