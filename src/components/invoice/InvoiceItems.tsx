@@ -3,7 +3,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { InvoiceItem, OtherFees } from "@/types/invoice";
+import { DocumentItem, OtherFees } from "@/types/invoice";
 import { Plus, Trash2, Calendar, ChevronDown, HelpCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatCurrency } from "@/lib/invoice-utils";
@@ -17,9 +17,9 @@ import {
 import { Separator } from "@/components/ui/separator";
 
 interface InvoiceItemsProps {
-  items: InvoiceItem[];
+  items: DocumentItem[];
   addItem: () => void;
-  updateItem: (itemId: string, updates: Partial<InvoiceItem>) => void;
+  updateItem: (itemId: string, updates: Partial<DocumentItem>) => void;
   removeItem: (itemId: string) => void;
   clearAllItems: () => void;
   otherFees: OtherFees;
@@ -37,7 +37,7 @@ export const InvoiceItems: React.FC<InvoiceItemsProps> = ({
 }) => {
   const handleInputChange = (
     itemId: string,
-    field: keyof InvoiceItem,
+    field: keyof DocumentItem,
     value: string | number
   ) => {
     // For number fields, convert the string value to a number
