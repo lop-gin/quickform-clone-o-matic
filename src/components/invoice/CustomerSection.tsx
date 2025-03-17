@@ -43,7 +43,7 @@ export const CustomerSection: React.FC<CustomerSectionProps> = ({
   
   return (
     <div className="pb-5">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="space-y-3">
         <div>
           <div className="flex items-center mb-1">
             <Label htmlFor="customer" className="text-xs font-medium text-gray-600 mr-1">Customer</Label>
@@ -55,20 +55,8 @@ export const CustomerSection: React.FC<CustomerSectionProps> = ({
               <ChevronDown className="h-3 w-3 opacity-50" />
             </Button>
           </div>
-          <div className="mt-3">
-            <div className="flex items-center mb-1">
-              <Label htmlFor="billingAddress" className="text-xs font-medium text-gray-600 mr-1">Billing address</Label>
-            </div>
-            <Textarea 
-              id="billingAddress"
-              name="billing.street"
-              className="min-h-[80px] resize-none text-xs"
-              value={customer.billingAddress.street}
-              onChange={handleCustomerChange}
-            />
-          </div>
         </div>
-        
+
         <div>
           <div className="flex items-center mb-1">
             <Label htmlFor="email" className="text-xs font-medium text-gray-600 mr-1">Customer email</Label>
@@ -83,19 +71,32 @@ export const CustomerSection: React.FC<CustomerSectionProps> = ({
             onChange={handleCustomerChange}
             placeholder="Separate emails with a comma"
           />
-          
-          <div className="mt-3">
-            <div className="flex items-center mb-1">
-              <Label className="text-xs font-medium text-gray-600 mr-1">Sales Rep</Label>
-            </div>
-            <Input
-              type="text"
-              className="w-full text-xs h-8"
-              placeholder=""
-              value={invoice.salesRep || ""}
-              onChange={(e) => updateInvoice({ salesRep: e.target.value })}
-            />
+        </div>
+        
+        <div>
+          <div className="flex items-center mb-1">
+            <Label className="text-xs font-medium text-gray-600 mr-1">Sales Rep</Label>
           </div>
+          <Input
+            type="text"
+            className="w-full text-xs h-8"
+            placeholder=""
+            value={invoice.salesRep || ""}
+            onChange={(e) => updateInvoice({ salesRep: e.target.value })}
+          />
+        </div>
+
+        <div>
+          <div className="flex items-center mb-1">
+            <Label htmlFor="billingAddress" className="text-xs font-medium text-gray-600 mr-1">Billing address</Label>
+          </div>
+          <Textarea 
+            id="billingAddress"
+            name="billing.street"
+            className="min-h-[80px] resize-none text-xs"
+            value={customer.billingAddress.street}
+            onChange={handleCustomerChange}
+          />
         </div>
       </div>
       <Separator className="mt-5 mb-0 w-full bg-gray-200" />

@@ -61,6 +61,7 @@ export const InvoiceDateFields: React.FC<InvoiceDateFieldsProps> = ({
               selected={invoiceDate}
               onSelect={(date) => date && onInvoiceDateChange(date)}
               initialFocus
+              className={cn("p-3 pointer-events-auto")}
             />
           </PopoverContent>
         </Popover>
@@ -111,6 +112,7 @@ export const InvoiceDateFields: React.FC<InvoiceDateFieldsProps> = ({
               selected={dueDate}
               onSelect={(date) => date && onDueDateChange(date)}
               initialFocus
+              className={cn("p-3 pointer-events-auto")}
             />
           </PopoverContent>
         </Popover>

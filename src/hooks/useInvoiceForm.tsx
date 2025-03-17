@@ -23,10 +23,14 @@ export function useInvoiceForm() {
       {
         id: Date.now().toString(),
         serviceDate: "",
+        category: "",
         product: "",
         description: "",
         quantity: 1,
+        unit: "ea",
+        unitPrice: 0,
         rate: 0,
+        taxPercent: 0,
         amount: 0,
       }
     ],
@@ -47,11 +51,16 @@ export function useInvoiceForm() {
       
       // Recalculate totals
       const subTotal = newInvoice.items.reduce(
-        (sum, item) => sum + item.quantity * item.rate,
+        (sum, item) => sum + (item.quantity * (item.unitPrice || item.rate)),
         0
       );
       
-      const total = subTotal;
+      const tax = newInvoice.items.reduce((sum, item) => {
+        const itemAmount = item.quantity * (item.unitPrice || item.rate);
+        return sum + (itemAmount * ((item.taxPercent || 0) / 100));
+      }, 0);
+      
+      const total = subTotal + tax;
       const balanceDue = total;
       
       return {
@@ -76,10 +85,14 @@ export function useInvoiceForm() {
         {
           id: Date.now().toString(),
           serviceDate: "",
+          category: "",
           product: "",
           description: "",
           quantity: 1,
+          unit: "ea",
+          unitPrice: 0,
           rate: 0,
+          taxPercent: 0,
           amount: 0,
         },
       ],
@@ -92,7 +105,7 @@ export function useInvoiceForm() {
       if (item.id === itemId) {
         const updatedItem = { ...item, ...updates };
         // Calculate the amount
-        updatedItem.amount = updatedItem.quantity * updatedItem.rate;
+        updatedItem.amount = updatedItem.quantity * (updatedItem.unitPrice || updatedItem.rate);
         return updatedItem;
       }
       return item;
@@ -118,10 +131,14 @@ export function useInvoiceForm() {
         {
           id: Date.now().toString(),
           serviceDate: "",
+          category: "",
           product: "",
           description: "",
           quantity: 1,
+          unit: "ea",
+          unitPrice: 0,
           rate: 0,
+          taxPercent: 0,
           amount: 0,
         }
       ]

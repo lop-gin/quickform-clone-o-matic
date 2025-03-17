@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 interface InvoiceMessageProps {
   message: string;
@@ -16,8 +16,8 @@ export const InvoiceMessage: React.FC<InvoiceMessageProps> = ({
     <div>
       <Label className="text-xs font-medium text-gray-700">MESSAGE ON INVOICE</Label>
       <div className="mt-1">
-        <Input 
-          className="h-9 text-xs"
+        <Textarea 
+          className="min-h-[80px] resize-none text-xs"
           value={message}
           onChange={(e) => onChange(e.target.value)}
           placeholder="Enter a message to be displayed on the invoice"

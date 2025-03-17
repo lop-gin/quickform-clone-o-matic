@@ -17,10 +17,14 @@ export interface Customer {
 export interface InvoiceItem {
   id: string;
   serviceDate?: string;
+  category?: string;
   product: string;
   description: string;
   quantity: number;
+  unit?: string;
+  unitPrice?: number;
   rate: number;
+  taxPercent?: number;
   amount: number;
 }
 
