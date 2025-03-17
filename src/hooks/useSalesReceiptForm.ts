@@ -26,11 +26,11 @@ export function useSalesReceiptForm() {
         category: "",
         product: "",
         description: "",
-        quantity: 1,
-        unit: "ea",
-        unitPrice: 0,
-        rate: 0,
-        taxPercent: 0,
+        quantity: undefined,
+        unit: "",
+        unitPrice: undefined,
+        rate: undefined,
+        taxPercent: undefined,
         amount: 0,
       }
     ],
@@ -43,7 +43,7 @@ export function useSalesReceiptForm() {
     balanceDue: 0,
     otherFees: {
       description: "",
-      amount: 0
+      amount: undefined
     }
   };
 
@@ -71,3 +71,4 @@ export function useSalesReceiptForm() {
     saveSalesReceipt
   };
 }
+

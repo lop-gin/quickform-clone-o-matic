@@ -21,17 +21,17 @@ export interface DocumentItem {
   category?: string;
   product: string;
   description: string;
-  quantity: number;
+  quantity?: number;
   unit?: string;
   unitPrice?: number;
-  rate: number;
+  rate?: number;
   taxPercent?: number;
   amount: number;
 }
 
 export interface OtherFees {
   description: string;
-  amount: number;
+  amount?: number;
 }
 
 // Base document type that can be extended by specific document types
@@ -61,3 +61,4 @@ export interface SalesReceiptType extends Document {
   receiptNumber: string;
   saleDate: Date;
 }
+

@@ -13,6 +13,16 @@ export const OtherFees: React.FC<OtherFeesProps> = ({
   otherFees,
   updateOtherFees,
 }) => {
+  // Custom input handler to restrict input to numbers and decimals only
+  const handleNumberInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    
+    // Allow empty values, numbers, and only one decimal point
+    if (value === "" || /^[0-9]*\.?[0-9]*$/.test(value)) {
+      updateOtherFees({ amount: value === "" ? undefined : parseFloat(value) || 0 });
+    }
+  };
+
   return (
     <div className="w-1/2 flex items-start space-x-3">
       <div className="w-2/3">
@@ -28,13 +38,14 @@ export const OtherFees: React.FC<OtherFeesProps> = ({
         <Label className="text-xs font-medium text-gray-600 mb-1">Fee Amount</Label>
         <Input
           className="text-xs text-right"
-          type="number"
-          min="0"
-          step="0.01"
-          value={otherFees.amount}
-          onChange={(e) => updateOtherFees({ amount: parseFloat(e.target.value) || 0 })}
+          type="text"
+          inputMode="decimal"
+          value={otherFees.amount === 0 ? "" : otherFees.amount}
+          onChange={handleNumberInput}
+          placeholder=""
         />
       </div>
     </div>
   );
 };
+

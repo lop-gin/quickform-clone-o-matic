@@ -12,16 +12,17 @@ export function useDocumentForm<T extends Document>(initialState: T) {
       
       // Recalculate totals
       const subTotal = newDocument.items.reduce(
-        (sum, item) => sum + (item.quantity * (item.unitPrice || item.rate)),
+        (sum, item) => sum + ((item.quantity || 0) * ((item.unitPrice || 0) || (item.rate || 0))),
         0
       );
       
       const tax = newDocument.items.reduce((sum, item) => {
-        const itemAmount = item.quantity * (item.unitPrice || item.rate);
-        return sum + (itemAmount * ((item.taxPercent || 0) / 100));
+        const itemAmount = (item.quantity || 0) * ((item.unitPrice || 0) || (item.rate || 0));
+        return sum + (itemAmount * (((item.taxPercent || 0)) / 100));
       }, 0);
       
-      const total = subTotal + tax;
+      const otherFeesAmount = newDocument.otherFees?.amount || 0;
+      const total = subTotal + tax + otherFeesAmount;
       const balanceDue = total;
       
       return {
@@ -41,11 +42,17 @@ export function useDocumentForm<T extends Document>(initialState: T) {
   // Function to update other fees
   const updateOtherFees = (updates: Partial<OtherFees>) => {
     setDocument((prev) => {
-      const newOtherFees = { ...(prev.otherFees || { description: "", amount: 0 }), ...updates };
-      return {
+      const newOtherFees = { ...(prev.otherFees || { description: "", amount: undefined }), ...updates };
+      
+      // Trigger a recalculation of totals
+      const updatedDoc = {
         ...prev,
         otherFees: newOtherFees
       } as T;
+      
+      updateDocument(updatedDoc);
+      
+      return updatedDoc;
     });
   };
 
@@ -60,11 +67,11 @@ export function useDocumentForm<T extends Document>(initialState: T) {
           category: "",
           product: "",
           description: "",
-          quantity: 1,
-          unit: "ea",
-          unitPrice: 0,
-          rate: 0,
-          taxPercent: 0,
+          quantity: undefined,
+          unit: "",
+          unitPrice: undefined,
+          rate: undefined,
+          taxPercent: undefined,
           amount: 0,
         },
       ],
@@ -77,7 +84,7 @@ export function useDocumentForm<T extends Document>(initialState: T) {
       if (item.id === itemId) {
         const updatedItem = { ...item, ...updates };
         // Calculate the amount
-        updatedItem.amount = updatedItem.quantity * (updatedItem.unitPrice || updatedItem.rate);
+        updatedItem.amount = (updatedItem.quantity || 0) * ((updatedItem.unitPrice || 0) || (updatedItem.rate || 0));
         return updatedItem;
       }
       return item;
@@ -106,11 +113,11 @@ export function useDocumentForm<T extends Document>(initialState: T) {
           category: "",
           product: "",
           description: "",
-          quantity: 1,
-          unit: "ea",
-          unitPrice: 0,
-          rate: 0,
-          taxPercent: 0,
+          quantity: undefined,
+          unit: "",
+          unitPrice: undefined,
+          rate: undefined,
+          taxPercent: undefined,
           amount: 0,
         }
       ]
@@ -135,3 +142,4 @@ export function useDocumentForm<T extends Document>(initialState: T) {
     saveDocument
   };
 }
+

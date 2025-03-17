@@ -34,9 +34,19 @@ export const ItemRow: React.FC<ItemRowProps> = ({
   const handleInputChange = (field: keyof DocumentItem, value: string | number) => {
     // For number fields, convert the string value to a number
     if (field === "quantity" || field === "rate" || field === "taxPercent" || field === "unitPrice") {
-      onUpdate({ [field]: parseFloat(value as string) || 0 });
+      onUpdate({ [field]: value === "" ? undefined : parseFloat(value as string) || 0 });
     } else {
       onUpdate({ [field]: value });
+    }
+  };
+
+  // Custom input handler to restrict input to numbers and decimals only
+  const handleNumberInput = (e: React.ChangeEvent<HTMLInputElement>, field: keyof DocumentItem) => {
+    const value = e.target.value;
+    
+    // Allow empty values, numbers, and only one decimal point
+    if (value === "" || /^[0-9]*\.?[0-9]*$/.test(value)) {
+      handleInputChange(field, value);
     }
   };
 
@@ -53,7 +63,7 @@ export const ItemRow: React.FC<ItemRowProps> = ({
         {isSelected ? (
           <Select
             onValueChange={(value) => handleInputChange("category", value)}
-            value={item.category}
+            value={item.category || ""}
           >
             <SelectTrigger 
               className="w-full h-8 font-normal text-gray-700 focus:ring-0 focus:border-gray-300"
@@ -62,7 +72,7 @@ export const ItemRow: React.FC<ItemRowProps> = ({
                 onSelect();
               }}
             >
-              <SelectValue placeholder="Select category" />
+              <SelectValue placeholder="" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="category1">Category 1</SelectItem>
@@ -71,14 +81,14 @@ export const ItemRow: React.FC<ItemRowProps> = ({
             </SelectContent>
           </Select>
         ) : (
-          <div className="py-1 px-1 text-left">{item.category || '-'}</div>
+          <div className="py-1 px-1 text-left">{item.category || ''}</div>
         )}
       </td>
       <td className="py-1 border-r">
         {isSelected ? (
           <Select
             onValueChange={(value) => handleInputChange("product", value)}
-            value={item.product}
+            value={item.product || ""}
           >
             <SelectTrigger 
               className="w-full h-8 font-normal text-gray-700 focus:ring-0 focus:border-gray-300"
@@ -87,7 +97,7 @@ export const ItemRow: React.FC<ItemRowProps> = ({
                 onSelect();
               }}
             >
-              <SelectValue placeholder="Select a product/service" />
+              <SelectValue placeholder="" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="product1">Product 1</SelectItem>
@@ -96,14 +106,14 @@ export const ItemRow: React.FC<ItemRowProps> = ({
             </SelectContent>
           </Select>
         ) : (
-          <div className="py-1 px-1 text-left">{item.product || '-'}</div>
+          <div className="py-1 px-1 text-left">{item.product || ''}</div>
         )}
       </td>
       <td className="py-1 border-r">
         {isSelected ? (
           <Input
             className="border-gray-200 h-8 focus:ring-0 focus:ring-offset-0 focus:border-gray-300"
-            value={item.description}
+            value={item.description || ""}
             onChange={(e) => handleInputChange("description", e.target.value)}
             onClick={(e) => {
               e.stopPropagation();
@@ -111,41 +121,40 @@ export const ItemRow: React.FC<ItemRowProps> = ({
             }}
           />
         ) : (
-          <div className="py-1 px-1 text-left">{item.description || '-'}</div>
+          <div className="py-1 px-1 text-left">{item.description || ''}</div>
         )}
       </td>
       <td className="py-1 border-r">
         {isSelected ? (
           <Input
             className="border-gray-200 text-right h-8 focus:ring-0 focus:ring-offset-0 focus:border-gray-300"
-            type="number"
-            value={item.quantity}
-            onChange={(e) => handleInputChange("quantity", e.target.value)}
-            min="1"
-            step="1"
+            value={item.quantity === 0 ? "" : item.quantity}
+            onChange={(e) => handleNumberInput(e, "quantity")}
             onClick={(e) => {
               e.stopPropagation();
               onSelect();
             }}
+            type="text"
+            inputMode="decimal"
           />
         ) : (
-          <div className="text-right py-1 px-1">{item.quantity}</div>
+          <div className="text-right py-1 px-1">{item.quantity || ''}</div>
         )}
       </td>
-      <td className="py-1 border-r">
+      <td className="py-1 border-r text-right">
         {isSelected ? (
           <Select
             onValueChange={(value) => handleInputChange("unit", value)}
-            value={item.unit}
+            value={item.unit || ""}
           >
             <SelectTrigger 
-              className="w-full h-8 font-normal text-gray-700 focus:ring-0 focus:border-gray-300"
+              className="w-full h-8 font-normal text-gray-700 focus:ring-0 focus:border-gray-300 text-right"
               onClick={(e) => {
                 e.stopPropagation();
                 onSelect();
               }}
             >
-              <SelectValue placeholder="Select unit" />
+              <SelectValue placeholder="" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="ea">Each</SelectItem>
@@ -154,44 +163,41 @@ export const ItemRow: React.FC<ItemRowProps> = ({
             </SelectContent>
           </Select>
         ) : (
-          <div className="py-1 px-1">{item.unit || '-'}</div>
+          <div className="py-1 px-1 text-right">{item.unit || ''}</div>
         )}
       </td>
       <td className="py-1 border-r">
         {isSelected ? (
           <Input
             className="border-gray-200 text-right h-8 focus:ring-0 focus:ring-offset-0 focus:border-gray-300"
-            type="number"
-            value={item.unitPrice}
-            onChange={(e) => handleInputChange("unitPrice", e.target.value)}
-            min="0"
-            step="0.01"
+            value={item.unitPrice === 0 ? "" : item.unitPrice}
+            onChange={(e) => handleNumberInput(e, "unitPrice")}
             onClick={(e) => {
               e.stopPropagation();
               onSelect();
             }}
+            type="text"
+            inputMode="decimal"
           />
         ) : (
-          <div className="text-right py-1 px-1">{formatCurrency(item.unitPrice || 0)}</div>
+          <div className="text-right py-1 px-1">{item.unitPrice ? formatCurrency(item.unitPrice) : ''}</div>
         )}
       </td>
       <td className="py-1 border-r">
         {isSelected ? (
           <Input
             className="border-gray-200 text-right h-8 focus:ring-0 focus:ring-offset-0 focus:border-gray-300"
-            type="number"
-            value={item.taxPercent}
-            onChange={(e) => handleInputChange("taxPercent", e.target.value)}
-            min="0"
-            max="100"
-            step="0.1"
+            value={item.taxPercent === 0 ? "" : item.taxPercent}
+            onChange={(e) => handleNumberInput(e, "taxPercent")}
             onClick={(e) => {
               e.stopPropagation();
               onSelect();
             }}
+            type="text"
+            inputMode="decimal"
           />
         ) : (
-          <div className="text-right py-1 px-1">{item.taxPercent || 0}%</div>
+          <div className="text-right py-1 px-1">{item.taxPercent ? `${item.taxPercent}%` : ''}</div>
         )}
       </td>
       <td className="py-1 text-right px-1 border-r">
@@ -215,3 +221,4 @@ export const ItemRow: React.FC<ItemRowProps> = ({
     </tr>
   );
 };
+
