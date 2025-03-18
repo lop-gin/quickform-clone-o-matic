@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { X } from "lucide-react";
+import { X, ChevronDown, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CustomerSection } from "@/components/forms/CustomerSection";
 import { ItemsTable } from "@/components/forms/ItemsTable";
@@ -12,6 +12,12 @@ import { useInvoiceForm } from "@/hooks/useInvoiceForm";
 import { PageLoader } from "@/components/ui/page-loader";
 import { SalesRepresentative } from "@/components/forms/SalesRepresentative";
 import { AnimatePresence } from "framer-motion";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function InvoicePage() {
   const [loading, setLoading] = useState(true);
@@ -127,12 +133,35 @@ export default function InvoicePage() {
           </div>
           
           <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 flex justify-between items-center">
-            <Button variant="outline" onClick={clearAllItems}>
-              Cancel
-            </Button>
-            <div className="flex gap-3">
-              <Button variant="outline">Save as Draft</Button>
-              <Button onClick={saveInvoice}>Save Invoice</Button>
+            <div className="flex space-x-3">
+              <Link to="/dashboard">
+                <Button variant="destructive">
+                  <X className="mr-2 h-4 w-4" /> Cancel
+                </Button>
+              </Link>
+              <Button variant="secondary" onClick={clearAllItems}>
+                Clear
+              </Button>
+            </div>
+            
+            <div className="flex items-center">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button className="flex items-center">
+                    <Save className="mr-2 h-4 w-4" />
+                    Save & Close
+                    <ChevronDown className="ml-2 h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={saveInvoice}>
+                    Save & Close
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    Save & New
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </div>
