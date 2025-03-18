@@ -128,7 +128,7 @@ export const ItemRow: React.FC<ItemRowProps> = ({
         {isSelected ? (
           <Input
             className="border-gray-200 text-right h-8 focus:ring-0 focus:ring-offset-0 focus:border-gray-300"
-            value={item.quantity === 0 ? "" : item.quantity}
+            value={item.quantity === undefined ? "" : item.quantity}
             onChange={(e) => handleNumberInput(e, "quantity")}
             onClick={(e) => {
               e.stopPropagation();
@@ -170,7 +170,7 @@ export const ItemRow: React.FC<ItemRowProps> = ({
         {isSelected ? (
           <Input
             className="border-gray-200 text-right h-8 focus:ring-0 focus:ring-offset-0 focus:border-gray-300"
-            value={item.unitPrice === 0 ? "" : item.unitPrice}
+            value={item.unitPrice === undefined ? "" : item.unitPrice}
             onChange={(e) => handleNumberInput(e, "unitPrice")}
             onClick={(e) => {
               e.stopPropagation();
@@ -187,7 +187,7 @@ export const ItemRow: React.FC<ItemRowProps> = ({
         {isSelected ? (
           <Input
             className="border-gray-200 text-right h-8 focus:ring-0 focus:ring-offset-0 focus:border-gray-300"
-            value={item.taxPercent === 0 ? "" : item.taxPercent}
+            value={item.taxPercent === undefined ? "" : item.taxPercent}
             onChange={(e) => handleNumberInput(e, "taxPercent")}
             onClick={(e) => {
               e.stopPropagation();
@@ -221,4 +221,3 @@ export const ItemRow: React.FC<ItemRowProps> = ({
     </tr>
   );
 };
-

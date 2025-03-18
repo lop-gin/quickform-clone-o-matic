@@ -40,7 +40,7 @@ export const OtherFees: React.FC<OtherFeesProps> = ({
           className="text-xs text-right"
           type="text"
           inputMode="decimal"
-          value={otherFees.amount === 0 ? "" : otherFees.amount}
+          value={otherFees.amount === undefined ? "" : otherFees.amount}
           onChange={handleNumberInput}
           placeholder=""
         />
@@ -48,4 +48,3 @@ export const OtherFees: React.FC<OtherFeesProps> = ({
     </div>
   );
 };
-

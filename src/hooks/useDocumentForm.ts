@@ -142,4 +142,3 @@ export function useDocumentForm<T extends Document>(initialState: T) {
     saveDocument
   };
 }
-

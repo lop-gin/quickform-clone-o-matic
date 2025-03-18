@@ -1,54 +1,48 @@
 
-# Project Structure
+# Project Structure Documentation
 
-This project follows a modular and organized structure to create a scalable and maintainable application for managing invoices and sales receipts. Here's a breakdown of the key directories and files:
+This document provides an overview of the project structure and organization.
 
 ## Directory Structure
 
 ```
 src/
-├── app/
-│   └── dashboard/
-│       ├── layout.tsx              # Dashboard layout with header and main content
-│       ├── page.tsx                # Main dashboard page with links to forms
-│       └── sales/
-│           ├── invoice/
-│           │   └── page.tsx        # Invoice form page
-│           └── receipt/
-│               └── page.tsx        # Sales receipt form page
-├── components/
-│   ├── forms/
-│   │   ├── ItemsTable/             # Modular components for items table
-│   │   │   ├── index.tsx           # Main table component
-│   │   │   ├── ItemRow.tsx         # Individual row component
-│   │   │   ├── TableHeader.tsx     # Table header component
-│   │   │   ├── TableActions.tsx    # Actions for table (add/clear items)
-│   │   │   ├── OtherFees.tsx       # Other fees input section
-│   │   │   └── DocumentSummary.tsx # Summary with totals
-│   │   ├── InvoiceForm.tsx         # Invoice form component
-│   │   ├── SalesReceiptForm.tsx    # Sales receipt form component
-│   │   ├── CustomerSection.tsx     # Customer information section
-│   │   ├── DateFields.tsx          # Date field components
-│   │   ├── DocumentTotal.tsx       # Document total display
-│   │   ├── FormHeader.tsx          # Header for forms
-│   │   ├── FormActions.tsx         # Form action buttons
-│   │   └── FormMessage.tsx         # Message field for documents
-│   └── ui/                         # UI components (shadcn)
-├── hooks/
-│   ├── useDocumentForm.ts          # Generic hook for document forms
-│   ├── useInvoiceForm.ts           # Invoice-specific form hook
-│   └── useSalesReceiptForm.ts      # Sales receipt-specific form hook
-├── lib/
-│   ├── document-utils.ts           # Utility functions for documents
-│   └── utils.ts                    # Generic utility functions
-└── types/
-    └── document.ts                 # TypeScript type definitions
+├── app/                  # Main application pages
+│   └── dashboard/        # Dashboard pages
+│       ├── sales/        # Sales-related pages
+│       │   ├── invoice/  # Invoice pages
+│       │   └── receipt/  # Receipt pages
+├── components/           # Reusable UI components
+│   ├── forms/            # Form-related components
+│   │   └── ItemsTable/   # Table components for items
+│   ├── invoice/          # Invoice-specific components
+│   └── ui/               # UI components from shadcn/ui
+├── hooks/                # React hooks
+├── lib/                  # Utility functions and libraries
+├── pages/                # Top-level pages (Home, NotFound)
+└── types/                # TypeScript type definitions
 ```
 
-## Key Features
+## Key Folders
 
-1. **Modular Components**: Each component has a single responsibility, making the code easy to understand and maintain.
-2. **Reusable Form Logic**: Generic form handling through `useDocumentForm` hook.
-3. **Type Safety**: Comprehensive TypeScript types for all data structures.
-4. **Consistent UI**: Consistent styling and user experience across different forms.
-5. **Responsive Design**: Works well on desktop and mobile devices.
+### /app
+Contains the main page components organized by feature. Each page is a standalone component that represents a route in the application.
+
+### /components
+Houses all reusable UI components organized by their purpose:
+- `forms/`: Components specific to forms like CustomerSection, ItemsTable, etc.
+- `ui/`: UI components from the shadcn/ui library or custom UI components.
+
+### /hooks
+Custom React hooks that encapsulate reusable logic:
+- `useInvoiceForm`: Manages invoice form state and operations
+- `useSalesReceiptForm`: Manages sales receipt form state and operations
+- `useDocumentForm`: Base hook that provides common functionality for document forms
+
+### /lib
+Utility functions and shared logic:
+- `document-utils.ts`: Utilities for document handling like number generation and formatting
+
+### /types
+TypeScript type definitions that are shared across the application:
+- `document.ts`: Defines types for invoices, sales receipts, and related entities

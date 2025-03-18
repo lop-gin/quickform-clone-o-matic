@@ -25,7 +25,8 @@ export const DocumentSummary: React.FC<DocumentSummaryProps> = ({
   };
 
   const calculateTotal = () => {
-    return calculateSubtotal() + calculateTax() + otherFees.amount;
+    const otherFeesAmount = otherFees?.amount || 0;
+    return calculateSubtotal() + calculateTax() + otherFeesAmount;
   };
 
   return (
@@ -42,7 +43,7 @@ export const DocumentSummary: React.FC<DocumentSummaryProps> = ({
           {formatCurrency(calculateTax())}
         </span>
       </div>
-      {otherFees.amount > 0 && (
+      {otherFees?.amount > 0 && (
         <div className="flex justify-between items-center text-xs">
           <span className="text-gray-600">Other Fees</span>
           <span className="font-medium">{formatCurrency(otherFees.amount)}</span>

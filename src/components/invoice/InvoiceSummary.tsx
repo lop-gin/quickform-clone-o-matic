@@ -24,4 +24,3 @@ export const InvoiceSummary: React.FC<InvoiceSummaryProps> = ({
     </div>
   );
 };
-

@@ -61,4 +61,3 @@ export interface SalesReceiptType extends Document {
   receiptNumber: string;
   saleDate: Date;
 }
-
