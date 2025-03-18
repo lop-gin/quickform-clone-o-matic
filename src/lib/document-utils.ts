@@ -1,44 +1,41 @@
+// Utility functions for document generation and calculations
 
-/**
- * Generates a random invoice number with a specific format: INV-XXXXX
- * where XXXXX is a random 5-digit number
- */
-export const generateInvoiceNumber = (): string => {
-  const random = Math.floor(Math.random() * 90000) + 10000; // 5-digit random number
-  return `INV-${random}`;
-};
+// Generate a random invoice number
+export function generateInvoiceNumber(): string {
+  return `INV-${Math.floor(Math.random() * 1000)
+    .toString()
+    .padStart(3, "0")}`;
+}
 
-/**
- * Formats a currency value to a string with 2 decimal places
- */
-export const formatCurrency = (value: number): string => {
-  return value.toFixed(2);
-};
+// Generate a random receipt number
+export function generateReceiptNumber(): string {
+  return `SR-${Math.floor(Math.random() * 1000)
+    .toString()
+    .padStart(3, "0")}`;
+}
 
-/**
- * Calculates the due date based on terms
- */
-export const calculateDueDate = (invoiceDate: Date, terms: string): Date => {
-  const date = new Date(invoiceDate);
+// Generate a random credit note number
+export function generateCreditNoteNumber(): string {
+  return `CN-${Math.floor(Math.random() * 1000)
+    .toString()
+    .padStart(3, "0")}`;
+}
+
+// Calculate due date based on terms
+export function calculateDueDate(invoiceDate: Date, terms: string): Date {
+  const dueDate = new Date(invoiceDate);
   
-  if (terms === "Due on receipt") {
-    return date;
+  if (terms === "Net 15") {
+    dueDate.setDate(dueDate.getDate() + 15);
+  } else if (terms === "Net 30") {
+    dueDate.setDate(dueDate.getDate() + 30);
+  } else if (terms === "Net 45") {
+    dueDate.setDate(dueDate.getDate() + 45);
+  } else if (terms === "Net 60") {
+    dueDate.setDate(dueDate.getDate() + 60);
+  } else if (terms === "Due on Receipt") {
+    // No change, due date is same as invoice date
   }
   
-  const daysMatch = terms.match(/Net (\d+)/);
-  if (daysMatch && daysMatch[1]) {
-    const days = parseInt(daysMatch[1], 10);
-    date.setDate(date.getDate() + days);
-  }
-  
-  return date;
-};
-
-/**
- * Generates a random receipt number with a specific format: REC-XXXXX
- * where XXXXX is a random 5-digit number
- */
-export const generateReceiptNumber = (): string => {
-  const random = Math.floor(Math.random() * 90000) + 10000; // 5-digit random number
-  return `REC-${random}`;
-};
+  return dueDate;
+}

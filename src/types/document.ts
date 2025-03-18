@@ -61,3 +61,9 @@ export interface SalesReceiptType extends Document {
   receiptNumber: string;
   saleDate: Date;
 }
+
+// Credit Note specific fields
+export interface CreditNoteType extends Document {
+  creditNoteNumber: string;
+  creditNoteDate: Date;
+}
