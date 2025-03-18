@@ -10,7 +10,7 @@ interface DocumentTotalProps {
 export const DocumentTotal: React.FC<DocumentTotalProps> = ({
   total,
   balanceDue,
-  otherFeesAmount = 0
+  otherFeesAmount
 }) => {
   const calculatedTotal = total + (otherFeesAmount || 0);
   const calculatedBalanceDue = balanceDue + (otherFeesAmount || 0);

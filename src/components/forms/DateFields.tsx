@@ -1,7 +1,6 @@
 
 import React from "react";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
@@ -89,31 +88,6 @@ export const TermsSelect: React.FC<TermsSelectProps> = ({
           <SelectItem value="Custom">Custom</SelectItem>
         </SelectContent>
       </Select>
-    </div>
-  );
-};
-
-interface SalesRepFieldProps {
-  salesRep: string;
-  onSalesRepChange: (salesRep: string) => void;
-}
-
-export const SalesRepField: React.FC<SalesRepFieldProps> = ({
-  salesRep,
-  onSalesRepChange,
-}) => {
-  return (
-    <div>
-      <div className="flex items-center mb-1">
-        <Label className="text-xs font-medium text-gray-600 mr-1">Sales Rep</Label>
-      </div>
-      <Input
-        type="text"
-        className="w-full text-xs h-9"
-        placeholder="Sales representative"
-        value={salesRep}
-        onChange={(e) => onSalesRepChange(e.target.value)}
-      />
     </div>
   );
 };

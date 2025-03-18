@@ -23,7 +23,7 @@ export const TableHeader: React.FC = () => {
       <th className="text-right py-1.5 w-[8%] border-r">
         <span className="text-[11px]">QTY</span>
       </th>
-      <th className="text-left py-1.5 w-[10%] border-r">
+      <th className="text-right py-1.5 w-[10%] border-r">
         <span className="text-[11px]">UNIT</span>
       </th>
       <th className="text-right py-1.5 w-[10%] border-r">
