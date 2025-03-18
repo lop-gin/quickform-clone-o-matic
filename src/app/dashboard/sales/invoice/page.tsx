@@ -132,14 +132,18 @@ export default function InvoicePage() {
             </div>
           </div>
           
-          <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 flex justify-between items-center">
+          <div className="fixed bottom-0 left-0 right-0 bg-gray-800 p-4 flex justify-between items-center">
             <div className="flex space-x-3">
               <Link to="/dashboard">
-                <Button variant="destructive">
-                  <X className="mr-2 h-4 w-4" /> Cancel
+                <Button variant="outline" className="bg-transparent text-white border-gray-600 hover:bg-gray-700 hover:text-white">
+                  Cancel
                 </Button>
               </Link>
-              <Button variant="secondary" onClick={clearAllItems}>
+              <Button 
+                variant="outline" 
+                className="bg-transparent text-white border-gray-600 hover:bg-gray-700 hover:text-white"
+                onClick={clearAllItems}
+              >
                 Clear
               </Button>
             </div>
@@ -147,9 +151,8 @@ export default function InvoicePage() {
             <div className="flex items-center">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button className="flex items-center">
-                    <Save className="mr-2 h-4 w-4" />
-                    Save & Close
+                  <Button className="bg-green-600 hover:bg-green-700 text-white flex items-center">
+                    Save and close
                     <ChevronDown className="ml-2 h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
