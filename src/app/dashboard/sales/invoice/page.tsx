@@ -11,7 +11,7 @@ import { DocumentTotal } from "@/components/forms/DocumentTotal";
 import { useInvoiceForm } from "@/hooks/useInvoiceForm";
 import { PageLoader } from "@/components/ui/page-loader";
 import { SalesRepresentative } from "@/components/forms/SalesRepresentative";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 
 export default function InvoicePage() {
   const [loading, setLoading] = useState(true);

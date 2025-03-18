@@ -3,9 +3,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
-// Adding framer-motion for fancy animations
-<lov-add-dependency>framer-motion@latest</lov-add-dependency>
-
 export default function DashboardPage() {
   return (
     <div className="container mx-auto py-8 px-4">
