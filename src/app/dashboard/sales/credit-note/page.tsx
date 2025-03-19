@@ -21,6 +21,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
+import { DocumentItem } from "@/types/document";
 
 // Dummy data for invoices and receipts mapped by customer
 const customerTransactions = {
@@ -37,25 +38,25 @@ const customerTransactions = {
   ]
 };
 
-// Dummy data for products in transactions
-const transactionItems = {
+// Dummy data for products in transactions - Updated with all required DocumentItem properties
+const transactionItems: Record<string, DocumentItem[]> = {
   "1": [
-    { id: "101", product: "Website Design", description: "Company website redesign", quantity: 1, unitPrice: 1000, taxPercent: 10, amount: 1000 },
-    { id: "102", product: "SEO Setup", description: "Initial SEO configuration", quantity: 5, unitPrice: 50, taxPercent: 0, amount: 250 }
+    { id: "101", product: "Website Design", description: "Company website redesign", quantity: 1, unitPrice: 1000, taxPercent: 10, amount: 1000, serviceDate: "", category: "", unit: "", rate: undefined },
+    { id: "102", product: "SEO Setup", description: "Initial SEO configuration", quantity: 5, unitPrice: 50, taxPercent: 0, amount: 250, serviceDate: "", category: "", unit: "", rate: undefined }
   ],
   "2": [
-    { id: "201", product: "Content Writing", description: "Blog posts (5)", quantity: 5, unitPrice: 150, taxPercent: 8, amount: 750 },
-    { id: "202", product: "Image Licensing", description: "Stock photos", quantity: 25, unitPrice: 5.02, taxPercent: 0, amount: 125.50 }
+    { id: "201", product: "Content Writing", description: "Blog posts (5)", quantity: 5, unitPrice: 150, taxPercent: 8, amount: 750, serviceDate: "", category: "", unit: "", rate: undefined },
+    { id: "202", product: "Image Licensing", description: "Stock photos", quantity: 25, unitPrice: 5.02, taxPercent: 0, amount: 125.50, serviceDate: "", category: "", unit: "", rate: undefined }
   ],
   "3": [
-    { id: "301", product: "Hosting - Basic", description: "Monthly hosting fee", quantity: 1, unitPrice: 325.75, taxPercent: 0, amount: 325.75 }
+    { id: "301", product: "Hosting - Basic", description: "Monthly hosting fee", quantity: 1, unitPrice: 325.75, taxPercent: 0, amount: 325.75, serviceDate: "", category: "", unit: "", rate: undefined }
   ],
   "4": [
-    { id: "401", product: "Social Media Campaign", description: "Facebook + Instagram", quantity: 1, unitPrice: 1200, taxPercent: 0, amount: 1200 },
-    { id: "402", product: "Analytics Setup", description: "Google Analytics", quantity: 2, unitPrice: 150, taxPercent: 0, amount: 300 }
+    { id: "401", product: "Social Media Campaign", description: "Facebook + Instagram", quantity: 1, unitPrice: 1200, taxPercent: 0, amount: 1200, serviceDate: "", category: "", unit: "", rate: undefined },
+    { id: "402", product: "Analytics Setup", description: "Google Analytics", quantity: 2, unitPrice: 150, taxPercent: 0, amount: 300, serviceDate: "", category: "", unit: "", rate: undefined }
   ],
   "5": [
-    { id: "501", product: "Email Marketing", description: "Newsletter campaign", quantity: 1, unitPrice: 450.25, taxPercent: 0, amount: 450.25 }
+    { id: "501", product: "Email Marketing", description: "Newsletter campaign", quantity: 1, unitPrice: 450.25, taxPercent: 0, amount: 450.25, serviceDate: "", category: "", unit: "", rate: undefined }
   ]
 };
 
@@ -94,17 +95,17 @@ export default function CreditNotePage() {
     
     // Get all items from selected transactions
     const allItems = selectedTransactions.flatMap(transId => 
-      transactionItems[transId as keyof typeof transactionItems].map(item => ({
+      transactionItems[transId].map(item => ({
         ...item,
         id: `${Date.now()}-${item.id}`, // Create unique IDs
-        // Ensure all required properties exist
+        // Make sure all properties exist and match the DocumentItem interface
         category: item.category || "",
         serviceDate: item.serviceDate || "",
         unit: item.unit || "",
         rate: item.rate,
-        quantity: item.quantity,
-        unitPrice: item.unitPrice,
-        taxPercent: item.taxPercent,
+        quantity: item.quantity || 0,
+        unitPrice: item.unitPrice || 0,
+        taxPercent: item.taxPercent || 0,
         // Calculate amount
         amount: (item.quantity || 0) * (item.unitPrice || 0)
       }))
