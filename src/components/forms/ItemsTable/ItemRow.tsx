@@ -103,6 +103,10 @@ export const ItemRow: React.FC<ItemRowProps> = ({
               <SelectItem value="product1">Product 1</SelectItem>
               <SelectItem value="product2">Product 2</SelectItem>
               <SelectItem value="service1">Service 1</SelectItem>
+              <SelectItem value="Website Design">Website Design</SelectItem>
+              <SelectItem value="SEO Setup">SEO Setup</SelectItem>
+              <SelectItem value="Content Writing">Content Writing</SelectItem>
+              <SelectItem value="Email Marketing">Email Marketing</SelectItem>
             </SelectContent>
           </Select>
         ) : (

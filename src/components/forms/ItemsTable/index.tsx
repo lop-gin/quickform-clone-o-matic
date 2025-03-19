@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { DocumentItem, OtherFees } from "@/types/document";
 import { Separator } from "@/components/ui/separator";
 import { TableHeader } from "./TableHeader";
@@ -31,6 +31,13 @@ export const ItemsTable: React.FC<ItemsTableProps> = ({
   const [selectedRow, setSelectedRow] = useState<string | null>(
     items.length > 0 ? items[0].id : null
   );
+
+  // Update selectedRow when items change (e.g., when items are auto-populated)
+  useEffect(() => {
+    if (items.length > 0 && !items.some(item => item.id === selectedRow)) {
+      setSelectedRow(items[0].id);
+    }
+  }, [items, selectedRow]);
 
   return (
     <div className="mt-4 pb-4">

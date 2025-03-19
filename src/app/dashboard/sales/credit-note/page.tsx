@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { X, ChevronDown, Check } from "lucide-react";
+import { X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CustomerSection } from "@/components/forms/CustomerSection";
 import { ItemsTable } from "@/components/forms/ItemsTable";
@@ -20,6 +20,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { toast } from "sonner";
 
 // Dummy data for invoices and receipts mapped by customer
 const customerTransactions = {
@@ -91,21 +92,30 @@ export default function CreditNotePage() {
       return;
     }
     
-    // Clear current items only if we have transactions to add
-    clearAllItems();
-    
-    // Add all items from selected transactions
-    const items = selectedTransactions.flatMap(transId => 
+    // Get all items from selected transactions
+    const allItems = selectedTransactions.flatMap(transId => 
       transactionItems[transId as keyof typeof transactionItems].map(item => ({
         ...item,
-        id: Date.now() + "-" + item.id, // Create new unique IDs
+        id: `${Date.now()}-${item.id}`, // Create unique IDs
+        // Ensure all required properties exist
+        category: item.category || "",
+        serviceDate: item.serviceDate || "",
+        unit: item.unit || "",
+        rate: item.rate,
+        quantity: item.quantity,
+        unitPrice: item.unitPrice,
+        taxPercent: item.taxPercent,
+        // Calculate amount
+        amount: (item.quantity || 0) * (item.unitPrice || 0)
       }))
     );
     
-    if (items.length > 0) {
-      setItems(items);
+    // Update items in the form
+    if (allItems.length > 0) {
+      setItems(allItems);
+      toast.success(`Added ${allItems.length} items from selected transactions`);
     }
-  }, [selectedTransactions, clearAllItems, setItems]);
+  }, [selectedTransactions, setItems]);
 
   const handleTransactionSelect = (transactionId: string) => {
     setSelectedTransactions(prev => {
@@ -297,10 +307,19 @@ export default function CreditNotePage() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={saveCreditNote}>
+                  <DropdownMenuItem onClick={() => {
+                    saveCreditNote();
+                    toast.success("Credit note saved successfully");
+                  }}>
                     Save & Close
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => {
+                    saveCreditNote();
+                    clearAllItems();
+                    setCustomerName("");
+                    setSelectedTransactions([]);
+                    toast.success("Credit note saved and new form created");
+                  }}>
                     Save & New
                   </DropdownMenuItem>
                 </DropdownMenuContent>

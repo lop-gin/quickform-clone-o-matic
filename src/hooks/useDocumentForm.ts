@@ -62,7 +62,7 @@ export function useDocumentForm<T extends Document>(initialState: T) {
       items: [
         ...document.items,
         {
-          id: Date.now().toString(),
+          id: `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
           serviceDate: "",
           category: "",
           product: "",
@@ -108,7 +108,7 @@ export function useDocumentForm<T extends Document>(initialState: T) {
     updateDocument({
       items: [
         {
-          id: Date.now().toString(),
+          id: `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
           serviceDate: "",
           category: "",
           product: "",
