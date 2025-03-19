@@ -1,3 +1,4 @@
+
 // Utility functions for document generation and calculations
 
 // Generate a random invoice number
@@ -38,4 +39,14 @@ export function calculateDueDate(invoiceDate: Date, terms: string): Date {
   }
   
   return dueDate;
+}
+
+// Format a number as a currency string
+export function formatCurrency(amount: number): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(amount);
 }
