@@ -1,26 +1,16 @@
+
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { X, ChevronDown } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { CustomerSection } from "@/components/forms/CustomerSection";
-import { ItemsTable } from "@/components/forms/ItemsTable";
-import { FormMessage } from "@/components/forms/FormMessage";
-import { DateField } from "@/components/forms/DateFields";
-import { DocumentTotal } from "@/components/forms/DocumentTotal";
-import { useCreditNoteForm } from "@/hooks/useCreditNoteForm";
-import { PageLoader } from "@/components/ui/page-loader";
-import { SalesRepresentative } from "@/components/forms/SalesRepresentative";
 import { AnimatePresence } from "framer-motion";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 import { DocumentItem } from "@/types/document";
+import { useCreditNoteForm } from "@/hooks/useCreditNoteForm";
+import { PageLoader } from "@/components/ui/page-loader";
+import { CreditNoteHeader } from "@/components/credit-note/CreditNoteHeader";
+import { CreditNoteForm } from "@/components/credit-note/CreditNoteForm";
+import { TransactionSelection } from "@/components/credit-note/TransactionSelection";
+import { CreditNoteActions } from "@/components/credit-note/CreditNoteActions";
+import { ItemsTable } from "@/components/forms/ItemsTable";
+import { FormMessage } from "@/components/forms/FormMessage";
 
 // Dummy data for invoices and receipts mapped by customer
 const customerTransactions = {
@@ -148,6 +138,16 @@ export default function CreditNotePage() {
       });
     }
   };
+  
+  // Reset form handler for "Save & New"
+  const handleSaveAndNew = () => {
+    saveCreditNote();
+    clearAllItems();
+    setCustomerName("");
+    setSelectedTransactions([]);
+    setItemsPopulated(false);
+    toast.success("Credit note saved and new form created");
+  };
 
   // Get transactions for the selected customer
   const availableTransactions = customerName ? customerTransactions[customerName as keyof typeof customerTransactions] || [] : [];
@@ -160,111 +160,28 @@ export default function CreditNotePage() {
     
       <div className="bg-gray-50 min-h-screen w-full">
         <div className="bg-transparent pb-20">
-          <div className="bg-white shadow-sm border-b border-gray-200 p-4 flex justify-between items-center">
-            <h1 className="text-xl font-semibold">Credit Note</h1>
-            <Link to="/dashboard">
-              <Button variant="ghost" size="icon">
-                <X className="h-5 w-5" />
-              </Button>
-            </Link>
-          </div>
+          <CreditNoteHeader />
+          
+          <CreditNoteForm
+            creditNote={creditNote}
+            updateCreditNote={updateCreditNote}
+            updateCustomer={updateCustomer}
+            addCreditNoteItem={addCreditNoteItem}
+            updateCreditNoteItem={updateCreditNoteItem}
+            removeCreditNoteItem={removeCreditNoteItem}
+            clearAllItems={clearAllItems}
+            updateOtherFees={updateOtherFees}
+            onCustomerSelect={handleCustomerSelect}
+          />
+          
+          <TransactionSelection 
+            customerName={customerName}
+            availableTransactions={availableTransactions}
+            selectedTransactions={selectedTransactions}
+            onTransactionSelect={handleTransactionSelect}
+          />
           
           <div className="p-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <div className="md:col-span-2">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <CustomerSection 
-                      customer={creditNote.customer}
-                      document={creditNote}
-                      updateCustomer={updateCustomer} 
-                      updateDocument={updateCreditNote}
-                      onCustomerSelect={handleCustomerSelect}
-                    />
-                  </div>
-                  <div>
-                    <div className="space-y-3 pb-5">
-                      <DateField 
-                        label="Credit note date"
-                        date={creditNote.creditNoteDate}
-                        onDateChange={(date) => updateCreditNote({ creditNoteDate: date })}
-                      />
-                      
-                      <SalesRepresentative 
-                        value={creditNote.salesRep || ""}
-                        onChange={(rep) => updateCreditNote({ salesRep: rep })}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <DocumentTotal 
-                  total={creditNote.total}
-                  balanceDue={creditNote.balanceDue}
-                  otherFeesAmount={creditNote.otherFees?.amount}
-                />
-              </div>
-            </div>
-            
-            {/* Transaction selection table - Only show when customer is selected */}
-            {customerName && (
-              <div className="bg-white rounded-md shadow-sm p-4 mb-6">
-                <div className="mb-3">
-                  <h2 className="text-sm font-medium text-gray-700">Select Invoices/Receipts to Credit</h2>
-                  <p className="text-xs text-gray-500">Select one or more transactions to add their items to this credit note.</p>
-                </div>
-                
-                {availableTransactions.length > 0 ? (
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="bg-gray-50">
-                        <TableHead className="w-10"></TableHead>
-                        <TableHead className="w-10">#</TableHead>
-                        <TableHead>Date</TableHead>
-                        <TableHead>Transaction Number</TableHead>
-                        <TableHead className="text-right">Amount</TableHead>
-                        <TableHead>Status</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {availableTransactions.map((transaction, index) => (
-                        <TableRow key={transaction.id} className="hover:bg-gray-50">
-                          <TableCell className="p-2">
-                            <Checkbox 
-                              checked={selectedTransactions.includes(transaction.id)}
-                              onCheckedChange={() => handleTransactionSelect(transaction.id)}
-                            />
-                          </TableCell>
-                          <TableCell className="p-2">{index + 1}</TableCell>
-                          <TableCell className="p-2">{transaction.date}</TableCell>
-                          <TableCell className="p-2 font-medium">{transaction.number}</TableCell>
-                          <TableCell className="p-2 text-right">{transaction.total.toFixed(2)}</TableCell>
-                          <TableCell className="p-2">
-                            <span 
-                              className={`inline-block px-2 py-1 text-xs rounded-full ${
-                                transaction.status === 'paid' 
-                                  ? 'bg-green-100 text-green-800' 
-                                  : transaction.status === 'overdue'
-                                    ? 'bg-red-100 text-red-800'
-                                    : 'bg-yellow-100 text-yellow-800'
-                              }`}
-                            >
-                              {transaction.status}
-                            </span>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                ) : (
-                  <div className="text-center py-4 text-gray-500">
-                    No transactions available for this customer
-                  </div>
-                )}
-              </div>
-            )}
-            
             <div className="bg-white rounded-md shadow-sm p-4 mb-6">
               <ItemsTable 
                 items={creditNote.items} 
@@ -287,51 +204,11 @@ export default function CreditNotePage() {
             </div>
           </div>
           
-          <div className="fixed bottom-0 left-0 right-0 bg-gray-800 p-4 flex justify-between items-center">
-            <div className="flex space-x-3">
-              <Link to="/dashboard">
-                <Button variant="outline" className="bg-transparent text-white border-gray-600 hover:bg-gray-700 hover:text-white">
-                  Cancel
-                </Button>
-              </Link>
-              <Button 
-                variant="outline"
-                className="bg-transparent text-white border-gray-600 hover:bg-gray-700 hover:text-white"
-                onClick={clearAllItems}
-              >
-                Clear
-              </Button>
-            </div>
-            
-            <div className="flex items-center">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button className="bg-green-600 hover:bg-green-700 text-white flex items-center">
-                    Save and close
-                    <ChevronDown className="ml-2 h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => {
-                    saveCreditNote();
-                    toast.success("Credit note saved successfully");
-                  }}>
-                    Save & Close
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => {
-                    saveCreditNote();
-                    clearAllItems();
-                    setCustomerName("");
-                    setSelectedTransactions([]);
-                    setItemsPopulated(false);
-                    toast.success("Credit note saved and new form created");
-                  }}>
-                    Save & New
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          </div>
+          <CreditNoteActions 
+            onSave={saveCreditNote}
+            onClear={clearAllItems}
+            onSaveAndNew={handleSaveAndNew}
+          />
         </div>
       </div>
     </>
