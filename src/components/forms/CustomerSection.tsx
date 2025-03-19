@@ -13,6 +13,7 @@ interface CustomerSectionProps {
   document: Document;
   updateCustomer: (customer: Customer) => void;
   updateDocument: (updates: Partial<Document>) => void;
+  onCustomerSelect?: (customerName: string) => void;
 }
 
 export const CustomerSection: React.FC<CustomerSectionProps> = ({
@@ -20,6 +21,7 @@ export const CustomerSection: React.FC<CustomerSectionProps> = ({
   document,
   updateCustomer,
   updateDocument,
+  onCustomerSelect,
 }) => {
   const handleCustomerChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -57,6 +59,11 @@ export const CustomerSection: React.FC<CustomerSectionProps> = ({
       email: selectedCustomer.email,
       company: selectedCustomer.company
     });
+    
+    // If onCustomerSelect callback is provided, call it with the customer name
+    if (onCustomerSelect) {
+      onCustomerSelect(selectedCustomer.name);
+    }
   };
 
   const handleCompanySelect = (value: string) => {

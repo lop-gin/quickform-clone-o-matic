@@ -61,7 +61,13 @@ export function useCreditNoteForm() {
 
   // Function to set multiple items at once (for populating from selected invoices/receipts)
   const setItems = (items: DocumentItem[]) => {
-    updateCreditNote({ items } as Partial<CreditNoteType>);
+    // Ensure each item has a valid amount value
+    const processedItems = items.map(item => ({
+      ...item,
+      amount: (item.quantity || 0) * (item.unitPrice || 0)
+    }));
+    
+    updateCreditNote({ items: processedItems } as Partial<CreditNoteType>);
   };
 
   return {
