@@ -19,6 +19,12 @@ const Index = () => {
           >
             Create Sales Receipt
           </Link>
+          <Link 
+            to="/dashboard/sales/credit-note" 
+            className="block w-full p-4 bg-red-50 border border-red-200 rounded-md hover:bg-red-100 transition-colors"
+          >
+            Create Credit Note
+          </Link>
         </div>
       </div>
     </div>

@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 import DashboardPage from "./app/dashboard/page";
 import InvoicePage from "./app/dashboard/sales/invoice/page";
 import SalesReceiptPage from "./app/dashboard/sales/receipt/page";
+import CreditNotePage from "./app/dashboard/sales/credit-note/page";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ const App = () => (
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/dashboard/sales/invoice" element={<InvoicePage />} />
           <Route path="/dashboard/sales/receipt" element={<SalesReceiptPage />} />
+          <Route path="/dashboard/sales/credit-note" element={<CreditNotePage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
