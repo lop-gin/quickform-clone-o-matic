@@ -1,18 +1,13 @@
 
 import React from "react";
 import { DocumentItem } from "@/types/document";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
-import { formatCurrency } from "@/lib/document-utils";
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
-} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { IndexCell } from "./cells/IndexCell";
+import { SelectCell } from "./cells/SelectCell";
+import { TextCell } from "./cells/TextCell";
+import { NumberCell } from "./cells/NumberCell";
+import { TotalCell } from "./cells/TotalCell";
+import { ActionCell } from "./cells/ActionCell";
 
 interface ItemRowProps {
   item: DocumentItem;
@@ -40,15 +35,30 @@ export const ItemRow: React.FC<ItemRowProps> = ({
     }
   };
 
-  // Custom input handler to restrict input to numbers and decimals only
-  const handleNumberInput = (e: React.ChangeEvent<HTMLInputElement>, field: keyof DocumentItem) => {
-    const value = e.target.value;
-    
-    // Allow empty values, numbers, and only one decimal point
-    if (value === "" || /^[0-9]*\.?[0-9]*$/.test(value)) {
-      handleInputChange(field, value);
-    }
-  };
+  // Category options
+  const categoryOptions = [
+    { value: "category1", label: "Category 1" },
+    { value: "category2", label: "Category 2" },
+    { value: "category3", label: "Category 3" },
+  ];
+
+  // Product options
+  const productOptions = [
+    { value: "product1", label: "Product 1" },
+    { value: "product2", label: "Product 2" },
+    { value: "service1", label: "Service 1" },
+    { value: "Website Design", label: "Website Design" },
+    { value: "SEO Setup", label: "SEO Setup" },
+    { value: "Content Writing", label: "Content Writing" },
+    { value: "Email Marketing", label: "Email Marketing" },
+  ];
+
+  // Unit options
+  const unitOptions = [
+    { value: "ea", label: "Each" },
+    { value: "hr", label: "Hour" },
+    { value: "kg", label: "Kilogram" },
+  ];
 
   return (
     <tr 
@@ -58,170 +68,83 @@ export const ItemRow: React.FC<ItemRowProps> = ({
       )}
       onClick={onSelect}
     >
-      <td className="text-center py-1 text-gray-500 w-8 border-r">{index + 1}</td>
+      <IndexCell index={index} />
+      
       <td className="py-1 border-r">
-        {isSelected ? (
-          <Select
-            onValueChange={(value) => handleInputChange("category", value)}
-            value={item.category || ""}
-          >
-            <SelectTrigger 
-              className="w-full h-8 font-normal text-gray-700 focus:ring-0 focus:border-gray-300"
-              onClick={(e) => {
-                e.stopPropagation();
-                onSelect();
-              }}
-            >
-              <SelectValue placeholder="" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="category1">Category 1</SelectItem>
-              <SelectItem value="category2">Category 2</SelectItem>
-              <SelectItem value="category3">Category 3</SelectItem>
-            </SelectContent>
-          </Select>
-        ) : (
-          <div className="py-1 px-1 text-left">{item.category || ''}</div>
-        )}
+        <SelectCell 
+          value={item.category || ""}
+          onChange={(value) => handleInputChange("category", value)}
+          options={categoryOptions}
+          isEditing={isSelected}
+          onFocus={onSelect}
+        />
       </td>
+      
       <td className="py-1 border-r">
-        {isSelected ? (
-          <Select
-            onValueChange={(value) => handleInputChange("product", value)}
-            value={item.product || ""}
-          >
-            <SelectTrigger 
-              className="w-full h-8 font-normal text-gray-700 focus:ring-0 focus:border-gray-300"
-              onClick={(e) => {
-                e.stopPropagation();
-                onSelect();
-              }}
-            >
-              <SelectValue placeholder="" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="product1">Product 1</SelectItem>
-              <SelectItem value="product2">Product 2</SelectItem>
-              <SelectItem value="service1">Service 1</SelectItem>
-              <SelectItem value="Website Design">Website Design</SelectItem>
-              <SelectItem value="SEO Setup">SEO Setup</SelectItem>
-              <SelectItem value="Content Writing">Content Writing</SelectItem>
-              <SelectItem value="Email Marketing">Email Marketing</SelectItem>
-            </SelectContent>
-          </Select>
-        ) : (
-          <div className="py-1 px-1 text-left">{item.product || ''}</div>
-        )}
+        <SelectCell 
+          value={item.product || ""}
+          onChange={(value) => handleInputChange("product", value)}
+          options={productOptions}
+          isEditing={isSelected}
+          onFocus={onSelect}
+        />
       </td>
+      
       <td className="py-1 border-r">
-        {isSelected ? (
-          <Input
-            className="border-gray-200 h-8 focus:ring-0 focus:ring-offset-0 focus:border-gray-300"
-            value={item.description || ""}
-            onChange={(e) => handleInputChange("description", e.target.value)}
-            onClick={(e) => {
-              e.stopPropagation();
-              onSelect();
-            }}
-          />
-        ) : (
-          <div className="py-1 px-1 text-left">{item.description || ''}</div>
-        )}
+        <TextCell 
+          value={item.description || ""}
+          onChange={(value) => handleInputChange("description", value)}
+          isEditing={isSelected}
+          onFocus={onSelect}
+        />
       </td>
+      
       <td className="py-1 border-r">
-        {isSelected ? (
-          <Input
-            className="border-gray-200 text-right h-8 focus:ring-0 focus:ring-offset-0 focus:border-gray-300"
-            value={item.quantity === undefined ? "" : item.quantity}
-            onChange={(e) => handleNumberInput(e, "quantity")}
-            onClick={(e) => {
-              e.stopPropagation();
-              onSelect();
-            }}
-            type="text"
-            inputMode="decimal"
-          />
-        ) : (
-          <div className="text-right py-1 px-1">{item.quantity || ''}</div>
-        )}
+        <NumberCell 
+          value={item.quantity}
+          onChange={(value) => handleInputChange("quantity", value)}
+          isEditing={isSelected}
+          onFocus={onSelect}
+        />
       </td>
+      
       <td className="py-1 border-r text-right">
-        {isSelected ? (
-          <Select
-            onValueChange={(value) => handleInputChange("unit", value)}
-            value={item.unit || ""}
-          >
-            <SelectTrigger 
-              className="w-full h-8 font-normal text-gray-700 focus:ring-0 focus:border-gray-300 text-right"
-              onClick={(e) => {
-                e.stopPropagation();
-                onSelect();
-              }}
-            >
-              <SelectValue placeholder="" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ea">Each</SelectItem>
-              <SelectItem value="hr">Hour</SelectItem>
-              <SelectItem value="kg">Kilogram</SelectItem>
-            </SelectContent>
-          </Select>
-        ) : (
-          <div className="py-1 px-1 text-right">{item.unit || ''}</div>
-        )}
+        <SelectCell 
+          value={item.unit || ""}
+          onChange={(value) => handleInputChange("unit", value)}
+          options={unitOptions}
+          isEditing={isSelected}
+          onFocus={onSelect}
+        />
       </td>
+      
       <td className="py-1 border-r">
-        {isSelected ? (
-          <Input
-            className="border-gray-200 text-right h-8 focus:ring-0 focus:ring-offset-0 focus:border-gray-300"
-            value={item.unitPrice === undefined ? "" : item.unitPrice}
-            onChange={(e) => handleNumberInput(e, "unitPrice")}
-            onClick={(e) => {
-              e.stopPropagation();
-              onSelect();
-            }}
-            type="text"
-            inputMode="decimal"
-          />
-        ) : (
-          <div className="text-right py-1 px-1">{item.unitPrice ? formatCurrency(item.unitPrice) : ''}</div>
-        )}
+        <NumberCell 
+          value={item.unitPrice}
+          onChange={(value) => handleInputChange("unitPrice", value)}
+          isEditing={isSelected}
+          onFocus={onSelect}
+          isCurrency={true}
+        />
       </td>
+      
       <td className="py-1 border-r">
-        {isSelected ? (
-          <Input
-            className="border-gray-200 text-right h-8 focus:ring-0 focus:ring-offset-0 focus:border-gray-300"
-            value={item.taxPercent === undefined ? "" : item.taxPercent}
-            onChange={(e) => handleNumberInput(e, "taxPercent")}
-            onClick={(e) => {
-              e.stopPropagation();
-              onSelect();
-            }}
-            type="text"
-            inputMode="decimal"
-          />
-        ) : (
-          <div className="text-right py-1 px-1">{item.taxPercent ? `${item.taxPercent}%` : ''}</div>
-        )}
+        <NumberCell 
+          value={item.taxPercent}
+          onChange={(value) => handleInputChange("taxPercent", value)}
+          isEditing={isSelected}
+          onFocus={onSelect}
+          isPercentage={true}
+        />
       </td>
-      <td className="py-1 text-right px-1 border-r">
-        {formatCurrency(
-          (item.quantity || 0) * (item.unitPrice || 0) * (1 + ((item.taxPercent || 0) / 100))
-        )}
-      </td>
-      <td className="py-1 text-center">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-6 w-6 p-0 text-gray-500"
-          onClick={(e) => {
-            e.stopPropagation();
-            onRemove();
-          }}
-        >
-          <Trash2 className="h-3.5 w-3.5" />
-        </Button>
-      </td>
+      
+      <TotalCell 
+        quantity={item.quantity}
+        unitPrice={item.unitPrice}
+        taxPercent={item.taxPercent}
+      />
+      
+      <ActionCell onRemove={onRemove} />
     </tr>
   );
 };
