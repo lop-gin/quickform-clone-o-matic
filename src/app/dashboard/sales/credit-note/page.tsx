@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { X, ChevronDown } from "lucide-react";
@@ -64,6 +63,7 @@ export default function CreditNotePage() {
   const [loading, setLoading] = useState(true);
   const [selectedTransactions, setSelectedTransactions] = useState<string[]>([]);
   const [customerName, setCustomerName] = useState<string>("");
+  const [itemsPopulated, setItemsPopulated] = useState<boolean>(false);
   
   const {
     creditNote,
@@ -87,9 +87,9 @@ export default function CreditNotePage() {
     return () => clearTimeout(timer);
   }, []);
 
-  // When selected transactions change, update the items
+  // When selected transactions change, update the items - with added flag to prevent multiple updates
   useEffect(() => {
-    if (selectedTransactions.length === 0) {
+    if (selectedTransactions.length === 0 || itemsPopulated) {
       return;
     }
     
@@ -114,15 +114,20 @@ export default function CreditNotePage() {
     // Update items in the form
     if (allItems.length > 0) {
       setItems(allItems);
+      setItemsPopulated(true); // Set flag to prevent multiple updates
       toast.success(`Added ${allItems.length} items from selected transactions`);
     }
-  }, [selectedTransactions, setItems]);
+  }, [selectedTransactions, setItems, itemsPopulated]);
 
   const handleTransactionSelect = (transactionId: string) => {
     setSelectedTransactions(prev => {
+      // If transaction is being unselected, we need to remove its items
       if (prev.includes(transactionId)) {
-        return prev.filter(id => id !== transactionId);
+        const newSelected = prev.filter(id => id !== transactionId);
+        setItemsPopulated(false); // Reset the flag to allow repopulation
+        return newSelected;
       } else {
+        setItemsPopulated(false); // Reset the flag to allow population with new items
         return [...prev, transactionId];
       }
     });
@@ -130,19 +135,18 @@ export default function CreditNotePage() {
 
   // Handler for customer selection
   const handleCustomerSelect = (name: string) => {
-    setCustomerName(name);
-    // Clear selected transactions when customer changes
-    setSelectedTransactions([]);
-    
-    // Only clear items if we actually have a new customer
+    // If customer name is changing, reset everything
     if (name !== customerName) {
+      setCustomerName(name);
+      setSelectedTransactions([]);
+      setItemsPopulated(false);
       clearAllItems();
+      
+      updateCustomer({
+        ...creditNote.customer,
+        name
+      });
     }
-    
-    updateCustomer({
-      ...creditNote.customer,
-      name
-    });
   };
 
   // Get transactions for the selected customer
@@ -319,6 +323,7 @@ export default function CreditNotePage() {
                     clearAllItems();
                     setCustomerName("");
                     setSelectedTransactions([]);
+                    setItemsPopulated(false);
                     toast.success("Credit note saved and new form created");
                   }}>
                     Save & New

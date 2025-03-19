@@ -61,10 +61,17 @@ export function useCreditNoteForm() {
 
   // Function to set multiple items at once (for populating from selected invoices/receipts)
   const setItems = (items: DocumentItem[]) => {
-    // Ensure each item has a valid amount value and unique ID
+    // Ensure each item has valid properties and unique ID
     const processedItems = items.map(item => ({
       ...item,
       id: `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`, // Create truly unique IDs
+      quantity: item.quantity || 0,
+      unitPrice: item.unitPrice || 0,
+      taxPercent: item.taxPercent || 0,
+      serviceDate: item.serviceDate || "",
+      category: item.category || "",
+      unit: item.unit || "",
+      rate: item.rate,
       amount: (item.quantity || 0) * (item.unitPrice || 0)
     }));
     

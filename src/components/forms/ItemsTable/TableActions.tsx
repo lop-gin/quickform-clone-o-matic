@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 interface TableActionsProps {
@@ -40,6 +40,7 @@ export const TableActions: React.FC<TableActionsProps> = ({
         className="text-gray-700 border-gray-300 h-7 text-xs"
         onClick={handleClearItems}
       >
+        <Trash2 className="mr-1 h-3 w-3" />
         Clear all lines
       </Button>
     </div>
