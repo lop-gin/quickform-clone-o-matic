@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 
-type FormType = "invoice" | "salesReceipt" | "creditNote" | "estimate" | "purchaseOrder";
+type FormType = "invoice" | "salesReceipt" | "creditNote" | "estimate" | "purchaseOrder" | "payment";
 
 interface FormActionsProps {
   onSave: () => void;
@@ -39,6 +39,8 @@ export const FormActions: React.FC<FormActionsProps> = ({
         return "Estimate";
       case "purchaseOrder":
         return "Purchase Order";
+      case "payment":
+        return "Payment";
       default:
         return "Document";
     }

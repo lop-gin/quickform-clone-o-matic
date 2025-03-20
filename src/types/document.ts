@@ -67,3 +67,28 @@ export interface CreditNoteType extends Document {
   creditNoteNumber: string;
   creditNoteDate: Date;
 }
+
+// Payment specific types
+export interface OutstandingInvoice {
+  id: string;
+  invoiceNumber: string;
+  invoiceDate: Date;
+  dueDate: Date;
+  status: 'open' | 'overdue' | 'paid' | 'partial';
+  originalAmount: number;
+  paymentReceived: number;
+  openBalance: number;
+  payment?: number;
+  selected: boolean;
+}
+
+export interface PaymentType {
+  paymentId: string;
+  paymentDate: Date;
+  customer: Customer;
+  amountReceived: number;
+  outstandingInvoices: OutstandingInvoice[];
+  message: string;
+  amountToApply: number;
+  amountToCredit: number;
+}
