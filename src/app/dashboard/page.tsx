@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -43,6 +44,19 @@ export default function DashboardPage() {
             <h2 className="text-xl font-semibold mb-3">Create Credit Note</h2>
             <p className="text-gray-600">
               Issue a credit note to correct errors or provide refunds.
+            </p>
+          </motion.div>
+        </Link>
+        
+        <Link to="/dashboard/sales/payment">
+          <motion.div 
+            className="bg-white rounded-lg shadow-md p-6 border border-gray-200 hover:border-purple-500 transition-all"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <h2 className="text-xl font-semibold mb-3">Receive Payment</h2>
+            <p className="text-gray-600">
+              Record customer payments and apply them to outstanding invoices.
             </p>
           </motion.div>
         </Link>

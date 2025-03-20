@@ -25,6 +25,12 @@ const Index = () => {
           >
             Create Credit Note
           </Link>
+          <Link 
+            to="/dashboard/sales/payment" 
+            className="block w-full p-4 bg-purple-50 border border-purple-200 rounded-md hover:bg-purple-100 transition-colors"
+          >
+            Receive Payment
+          </Link>
         </div>
       </div>
     </div>
