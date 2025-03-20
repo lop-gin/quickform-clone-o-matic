@@ -50,6 +50,19 @@ export const PaymentForm: React.FC = () => {
     toast.success("Payment saved successfully. New payment form ready.");
   };
 
+  // Create a document object that meets the Document interface requirements
+  // to pass to CustomerSection
+  const documentForCustomer = {
+    customer: payment.customer,
+    // Add required Document properties
+    items: [],
+    messageOnInvoice: "",
+    messageOnStatement: "",
+    subTotal: 0,
+    total: 0,
+    balanceDue: 0
+  };
+
   return (
     <div className="relative pb-20">
       <div className="mb-4 flex items-center justify-between">
@@ -61,7 +74,7 @@ export const PaymentForm: React.FC = () => {
         <div className="md:col-span-5">
           <CustomerSection
             customer={payment.customer}
-            document={payment}
+            document={documentForCustomer}
             updateCustomer={updateCustomer}
             updateDocument={() => {}}
             onCustomerSelect={handleCustomerSelect}
