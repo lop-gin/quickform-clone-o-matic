@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
@@ -8,9 +7,9 @@ import { PageLoader } from "@/components/ui/page-loader";
 import { CreditNoteHeader } from "@/components/credit-note/CreditNoteHeader";
 import { CreditNoteForm } from "@/components/credit-note/CreditNoteForm";
 import { TransactionSelection } from "@/components/credit-note/TransactionSelection";
-import { CreditNoteActions } from "@/components/credit-note/CreditNoteActions";
 import { ItemsTable } from "@/components/forms/ItemsTable";
 import { FormMessage } from "@/components/forms/FormMessage";
+import { FormActions } from "@/components/forms/FormActions";
 
 // Dummy data for invoices and receipts mapped by customer
 const customerTransactions = {
@@ -53,7 +52,7 @@ export default function CreditNotePage() {
   const [loading, setLoading] = useState(true);
   const [selectedTransactions, setSelectedTransactions] = useState<string[]>([]);
   const [customerName, setCustomerName] = useState<string>("");
-  const [itemsPopulated, setItemsPopulated] = useState<boolean>(false);
+  const [processedTransactions, setProcessedTransactions] = useState<string[]>([]);
   
   const {
     creditNote,
@@ -65,7 +64,7 @@ export default function CreditNotePage() {
     clearAllItems,
     saveCreditNote,
     updateOtherFees,
-    setItems
+    addItems
   } = useCreditNoteForm();
 
   // Simulate loading
@@ -77,47 +76,62 @@ export default function CreditNotePage() {
     return () => clearTimeout(timer);
   }, []);
 
-  // When selected transactions change, update the items - with added flag to prevent multiple updates
+  // When selected transactions change, update the items - with improved handling
   useEffect(() => {
-    if (selectedTransactions.length === 0 || itemsPopulated) {
-      return;
-    }
-    
-    // Get all items from selected transactions
-    const allItems = selectedTransactions.flatMap(transId => 
-      transactionItems[transId].map(item => ({
-        ...item,
-        id: `${Date.now()}-${item.id}`, // Create unique IDs
-        // Make sure all properties exist and match the DocumentItem interface
-        category: item.category || "",
-        serviceDate: item.serviceDate || "",
-        unit: item.unit || "",
-        rate: item.rate,
-        quantity: item.quantity || 0,
-        unitPrice: item.unitPrice || 0,
-        taxPercent: item.taxPercent || 0,
-        // Calculate amount
-        amount: (item.quantity || 0) * (item.unitPrice || 0)
-      }))
+    // Find newly selected transactions that haven't been processed yet
+    const newlySelectedTransactions = selectedTransactions.filter(
+      id => !processedTransactions.includes(id)
     );
     
-    // Update items in the form
-    if (allItems.length > 0) {
-      setItems(allItems);
-      setItemsPopulated(true); // Set flag to prevent multiple updates
-      toast.success(`Added ${allItems.length} items from selected transactions`);
+    // Find deselected transactions
+    const deselectedTransactions = processedTransactions.filter(
+      id => !selectedTransactions.includes(id)
+    );
+    
+    // Process newly selected transactions only if there are any
+    if (newlySelectedTransactions.length > 0) {
+      // Get items from newly selected transactions only
+      const newItems = newlySelectedTransactions.flatMap(transId => 
+        transactionItems[transId].map(item => ({
+          ...item,
+          id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`, // Create unique IDs
+          category: item.category || "",
+          serviceDate: item.serviceDate || "",
+          unit: item.unit || "",
+          rate: item.rate,
+          quantity: item.quantity || 0,
+          unitPrice: item.unitPrice || 0,
+          taxPercent: item.taxPercent || 0,
+          amount: (item.quantity || 0) * (item.unitPrice || 0)
+        }))
+      );
+      
+      // Add new items to the form (don't replace existing ones)
+      if (newItems.length > 0) {
+        addItems(newItems);
+        toast.success(`Added ${newItems.length} items from selected transactions`);
+      }
+      
+      // Update processed transactions list
+      setProcessedTransactions(prev => [...prev, ...newlySelectedTransactions]);
     }
-  }, [selectedTransactions, setItems, itemsPopulated]);
+    
+    // If any transactions were deselected, update the processed list
+    // but keep the items (user may have edited them)
+    if (deselectedTransactions.length > 0) {
+      setProcessedTransactions(prev => 
+        prev.filter(id => !deselectedTransactions.includes(id))
+      );
+    }
+  }, [selectedTransactions, addItems]);
 
   const handleTransactionSelect = (transactionId: string) => {
     setSelectedTransactions(prev => {
-      // If transaction is being unselected, we need to remove its items
       if (prev.includes(transactionId)) {
-        const newSelected = prev.filter(id => id !== transactionId);
-        setItemsPopulated(false); // Reset the flag to allow repopulation
-        return newSelected;
+        // Transaction is being unselected
+        return prev.filter(id => id !== transactionId);
       } else {
-        setItemsPopulated(false); // Reset the flag to allow population with new items
+        // Transaction is being selected
         return [...prev, transactionId];
       }
     });
@@ -129,7 +143,7 @@ export default function CreditNotePage() {
     if (name !== customerName) {
       setCustomerName(name);
       setSelectedTransactions([]);
-      setItemsPopulated(false);
+      setProcessedTransactions([]);
       clearAllItems();
       
       updateCustomer({
@@ -145,7 +159,7 @@ export default function CreditNotePage() {
     clearAllItems();
     setCustomerName("");
     setSelectedTransactions([]);
-    setItemsPopulated(false);
+    setProcessedTransactions([]);
     toast.success("Credit note saved and new form created");
   };
 
@@ -204,10 +218,11 @@ export default function CreditNotePage() {
             </div>
           </div>
           
-          <CreditNoteActions 
+          <FormActions 
             onSave={saveCreditNote}
             onClear={clearAllItems}
             onSaveAndNew={handleSaveAndNew}
+            formType="creditNote"
           />
         </div>
       </div>

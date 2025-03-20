@@ -11,17 +11,39 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 
-interface CreditNoteActionsProps {
+type FormType = "invoice" | "salesReceipt" | "creditNote" | "estimate" | "purchaseOrder";
+
+interface FormActionsProps {
   onSave: () => void;
   onClear: () => void;
   onSaveAndNew: () => void;
+  formType: FormType;
 }
 
-export const CreditNoteActions: React.FC<CreditNoteActionsProps> = ({
+export const FormActions: React.FC<FormActionsProps> = ({
   onSave,
   onClear,
   onSaveAndNew,
+  formType
 }) => {
+  // Function to get the document type label
+  const getDocumentTypeLabel = () => {
+    switch (formType) {
+      case "invoice":
+        return "Invoice";
+      case "salesReceipt":
+        return "Sales Receipt";
+      case "creditNote":
+        return "Credit Note";
+      case "estimate":
+        return "Estimate";
+      case "purchaseOrder":
+        return "Purchase Order";
+      default:
+        return "Document";
+    }
+  };
+
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-gray-800 p-4 flex justify-between items-center">
       <div className="flex space-x-3">
@@ -50,7 +72,7 @@ export const CreditNoteActions: React.FC<CreditNoteActionsProps> = ({
           <DropdownMenuContent align="end">
             <DropdownMenuItem onClick={() => {
               onSave();
-              toast.success("Credit note saved successfully");
+              toast.success(`${getDocumentTypeLabel()} saved successfully`);
             }}>
               Save & Close
             </DropdownMenuItem>

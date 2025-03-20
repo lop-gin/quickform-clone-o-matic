@@ -1,5 +1,5 @@
 
-import { InvoiceType } from "@/types/document";
+import { InvoiceType, DocumentItem } from "@/types/document";
 import { useDocumentForm } from "./useDocumentForm";
 import { generateInvoiceNumber, calculateDueDate } from "@/lib/document-utils";
 
@@ -70,6 +70,28 @@ export function useInvoiceForm() {
     });
   };
 
+  // Function to add multiple items at once
+  const addItems = (items: DocumentItem[]) => {
+    // Ensure each item has valid properties and unique ID
+    const processedItems = items.map(item => ({
+      ...item,
+      id: `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
+      quantity: item.quantity || 0,
+      unitPrice: item.unitPrice || 0,
+      taxPercent: item.taxPercent || 0,
+      serviceDate: item.serviceDate || "",
+      category: item.category || "",
+      unit: item.unit || "",
+      rate: item.rate,
+      amount: (item.quantity || 0) * (item.unitPrice || 0)
+    }));
+    
+    // Add to existing items instead of replacing them
+    updateInvoice({
+      items: [...invoice.items, ...processedItems]
+    } as Partial<InvoiceType>);
+  };
+
   return {
     invoice,
     updateInvoice,
@@ -80,7 +102,7 @@ export function useInvoiceForm() {
     clearAllItems,
     updateTerms,
     updateOtherFees,
-    saveInvoice
+    saveInvoice,
+    addItems
   };
 }
-
