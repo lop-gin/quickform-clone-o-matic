@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, X } from "lucide-react";
 import { CustomerSection } from "@/components/forms/CustomerSection";
 import { FormMessage } from "@/components/forms/FormMessage";
 import { FormActions } from "@/components/forms/FormActions";
@@ -19,6 +19,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 export const PaymentForm: React.FC = () => {
   const {
@@ -34,6 +35,7 @@ export const PaymentForm: React.FC = () => {
   } = usePaymentForm();
 
   const [isCustomerSelected, setIsCustomerSelected] = useState(false);
+  const navigate = useNavigate();
 
   const handleCustomerSelect = (customerName: string) => {
     setIsCustomerSelected(!!customerName);
@@ -64,9 +66,17 @@ export const PaymentForm: React.FC = () => {
   };
 
   return (
-    <div className="relative pb-20">
-      <div className="mb-4 flex items-center justify-between">
+    <div className="container mx-auto py-8 px-4 relative pb-20">
+      <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold tracking-tight">Receive Payment</h1>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="rounded-full"
+          onClick={() => navigate("/dashboard")}
+        >
+          <X className="h-4 w-4" />
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mt-4">

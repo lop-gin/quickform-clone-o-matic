@@ -26,13 +26,12 @@ export const AmountReceivedInput: React.FC<AmountReceivedInputProps> = ({
       </Label>
       <Input
         id="amountReceived"
-        type="number"
+        type="text"
+        inputMode="decimal"
         value={amount || ""}
         onChange={handleChange}
         className="mt-1 text-right"
         placeholder="0.00"
-        min={0}
-        step="0.01"
       />
     </div>
   );
